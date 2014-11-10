@@ -133,7 +133,6 @@
     <Compile Include="Base\GardenItem.cs" />
     <Compile Include="Base\ITask.cs" />
     <Compile Include="Base\SiteLauncherTask.cs" />
-    <Compile Include="Base\State.cs" />
     <Compile Include="Base\Task.cs" />
     <Compile Include="Base\ThreadedTask.cs" />
     <Compile Include="Download\BaseDownloader.cs" />

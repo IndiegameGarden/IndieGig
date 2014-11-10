@@ -1,4 +1,4 @@
-﻿// (c) 2010-2013 TranceTrance.com. Distributed under the FreeBSD license in LICENSE.txt
+﻿// (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -67,80 +67,6 @@ namespace IndiegameGarden.Base
         public void Dispose()
         {
             gamesCollection.Dispose();
-        }
-
-        /// <summary>
-        /// parse a JsonArray (array of items) or JsonObject (single game/item)
-        /// </summary>
-        protected GardenItem ParseJson(IJsonType j, Vector2 posOffset)
-        {
-            if (j is JsonArray)
-            {
-                JsonArray ja = j as JsonArray;
-                Vector2 childPosOffset = posOffset;
-                Vector2 posPrevious = Vector2.Zero;
-                //Vector2 childPosPrevious = Vector2.Zero;
-                Vector2 sectionWidthHeight = new Vector2(999f, 999f);
-                GardenItem gi = null;
-                
-                foreach (IJsonType jChild in ja)
-                {
-                    // parse each subitem and add to gamelist
-                    gi = ParseJson(jChild, childPosOffset);
-                    if (gi == null)
-                        continue;
-
-                    // optional first SectionID item of a JsonArray may contain position offset info for all items
-                    if (gi.IsSectionId)
-                    {
-                        childPosOffset += gi.Position;
-                        // WARNING mis-use the posdelta field for section width/height!!
-                        sectionWidthHeight = gi.PositionDelta;
-                        //childPosPrevious = Vector2.Zero;
-                        posPrevious = Vector2.Zero - Vector2.UnitX; // for first item of a section, apply a shift to align item to (0,0)
-                        continue;
-                    }                    
-
-                    // calculate correct item position
-                    if (!gi.IsPositionGiven)
-                    {
-                        gi.Position = posPrevious;
-                        do
-                        {
-                            if (gi.IsPositionDeltaGiven)
-                                gi.Position += gi.PositionDelta;
-                            else
-                                gi.Position += Vector2.UnitX; // advance in standard way to the right
-
-                            // checking the automatic calculated game position with section width
-                            if (gi.PositionX >= sectionWidthHeight.X)
-                            {
-                                gi.PositionY += 1f;
-                                gi.PositionX = 0f;
-                            }
-                        } while (gamesCollection.FindGameAt(gi.Position + childPosOffset) != null);
-                    }                    
-
-                    // update prev item position 
-                    posPrevious = gi.Position;
-
-                    // apply the section position offset
-                    gi.PositionX += childPosOffset.X;
-                    gi.PositionY += childPosOffset.Y;
-
-                    // add to collection at specified position
-                    gamesCollection.Add(gi);
-                }
-                return null; // indicate array was last item.
-            }
-            else if (j is JsonObject)
-            {
-                // process single leaf item
-                GardenItem ig = new GardenItem((JsonObject)j);
-                return ig;
-            }
-            else
-                throw new NotImplementedException("Unknown JSON type " + j + " found.");
         }
 
         /// <summary>

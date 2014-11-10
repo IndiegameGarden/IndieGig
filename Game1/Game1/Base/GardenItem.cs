@@ -1,4 +1,4 @@
-﻿// (c) 2010-2013 TranceTrance.com. Distributed under the FreeBSD license in LICENSE.txt
+﻿// (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
 using System;
 using System.IO;
@@ -8,10 +8,7 @@ using Microsoft.Xna.Framework;
 
 using TTengine.Core;
 using TTengine.Util;
-using IndiegameGarden.Menus;
 using IndiegameGarden.Install;
-using NetServ.Net.Json;
-using ProtoBuf;
 
 namespace IndiegameGarden.Base
 {
@@ -208,7 +205,7 @@ namespace IndiegameGarden.Base
             set
             {
                 description = value;
-                lineCount = TTutil.LineCount(description);
+                lineCount = TTUtil.LineCount(description);
             }
         }
 
@@ -233,7 +230,7 @@ namespace IndiegameGarden.Base
             get
             {
                 if (lineCount < 0)
-                    lineCount = TTutil.LineCount(description);
+                    lineCount = TTUtil.LineCount(description);
                 return lineCount;
             }
         }
@@ -586,52 +583,7 @@ namespace IndiegameGarden.Base
             refreshInstallationStatusNeeded = true;
         }
 
-        /// <summary>
-        /// create a new instance from a JSON representation
-        /// </summary>
-        /// <param name="j">the JSON data for one game</param>
-        public GardenItem(JsonObject j)
-        {
-            try { GameID = j["ID"].ToString(); }
-            catch (Exception) { ; }
-            try { Version = (int)((JsonNumber)j["Version"]).Value; }
-            catch (Exception) { ;}
-            try { VisibilityLabel = (byte)((JsonNumber)j["Visible"]).Value; }
-            catch (Exception) { ;}
-            try { PositionX = (float)((JsonNumber)j["X"]).Value; }
-            catch (Exception) { ;}
-            try { PositionY = (float)((JsonNumber)j["Y"]).Value; }
-            catch (Exception) { ;}
-            try { PositionDeltaX = (float)((JsonNumber)j["DX"]).Value; }
-            catch (Exception) { ;}
-            try { PositionDeltaY = (float)((JsonNumber)j["DY"]).Value; }
-            catch (Exception) { ;}
-            try { ScaleIcon = (float)((JsonNumber)j["Scale"]).Value; }
-            catch (Exception) { ;}
-            try { Name = j["Name"].ToString(); }
-            catch (Exception) { ; }
-            try { Description = j["Descr"].ToString(); }
-            catch (Exception) { ; }
-            try { HelpText = j["Help"].ToString(); }
-            catch (Exception) { ; }
-            try { HasOwnFolder = ((JsonBoolean)j["HasOwnFolder"]).Value; }
-            catch (Exception) { ; }
-            try { ExeFile = j["Exe"].ToString(); }
-            catch (Exception) { ; }
-            try { CdPath = j["Cd"].ToString(); }
-            catch (Exception) { ; }
-            try { PackedFileURL = j["Zip"].ToString(); }
-            catch (Exception) { ; }
-            try { thumbnailURL = j["ThumbURL"].ToString(); }
-            catch (Exception) { ; }
-            try { DeveloperWebsiteURL = j["Site"].ToString(); }
-            catch (Exception) { ; }
-            try { 
-                JsonArray am = (JsonArray)j["ZipMirrors"];
-                packedFileMirrors = JSONStore.ToStringList(am);
-            }
-            catch (Exception) { ;}
-            
+        public void dummyCodeTODO() {
             // update with default mirror location, only if a main location is defined
             // if no main location is given, use default location as main DL location 
             string defaultDownloadLoc;
