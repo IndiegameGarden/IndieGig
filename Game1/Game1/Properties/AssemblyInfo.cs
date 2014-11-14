@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Game1")]
-[assembly: AssemblyProduct("Game1")]
-[assembly: AssemblyDescription("Game description here")]
+[assembly: AssemblyTitle("IndieGig")]
+[assembly: AssemblyProduct("IndieGig")]
+[assembly: AssemblyDescription("How many indie games can you pack in one gig?")]
 [assembly: AssemblyCompany("IndiegameGarden.com")]
-[assembly: AssemblyCopyright("Copyright © IndiegameGarden.com 2010-2014")]
+[assembly: AssemblyCopyright("Copyright © game authors and IndiegameGarden.com 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

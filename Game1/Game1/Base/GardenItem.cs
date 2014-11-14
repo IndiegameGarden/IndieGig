@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using TTengine.Core;
 using TTengine.Util;
 using IndiegameGarden.Install;
+using IndiegameGarden.Util;
 
 namespace IndiegameGarden.Base
 {
@@ -18,34 +19,32 @@ namespace IndiegameGarden.Base
     public class GardenItem: IDisposable
     {
         /// <summary>
-        /// internally used string ID for game, no whitespace allowed, only alphanumeric and 
-        /// _ - special characters allowed.
+        /// internally used string ID for game, no whitespace allowed
         /// </summary>
         public string GameID = "";
-
-        /// <summary>
-        /// default visibility of item for the user; 1 (yes) or 0 (no)
-        /// </summary>
-        public byte VisibilityLabel = 1;
 
         /// <summary>
         /// Name of game
         /// </summary>
         public string Name = "";
 
+        protected string description = "";
+
+        protected string thumbnailURL = "";
+
+        protected string packedFileURL = "";
+
+        protected List<string> packedFileMirrors = new List<string>();
+
         /// <summary>
-        /// short game description to show on screen
+        /// visibility of item for the user
         /// </summary>
-        public string description = "";
+        public bool IsVisible = true;
 
         /// <summary>
         /// some hints for the player e.g. what the control keys are.
         /// </summary>
         public string HelpText = "";
-
-        protected string packedFileURL = "";
-
-        protected List<string> packedFileMirrors = new List<string>();
 
         /// <summary>
         /// URL (optionally without the http:// or www. in front) to game developer's website
@@ -72,51 +71,12 @@ namespace IndiegameGarden.Base
         /// </summary>
         public float ScaleIcon = 1f;
 
-        /// <summary>
-        /// where in 2D coordinates this game is positioned. Zero means non-specified.
-        /// </summary>
-        public float PositionX = 0;
-        public float PositionY = 0;
-
-        /// <summary>
-        /// in case a 2D Position is not given, this specifies a wished position delta of game w.r.t. previous game in the library.
-        /// </summary>
-        public float PositionDeltaX = 0;
-        public float PositionDeltaY = 0;
-
-        protected string thumbnailURL = "";
-
         public bool HasOwnFolder = false;
 
-        // <summary>Displayable status string of the current item, e.g. if downloading or failed to download.</summary>
-        public string Status = null;
-
         /// <summary>
-        /// Vector2 version (copy) of PositionX/PositionY
+        /// Displayable status string of the current item, e.g. if downloading or failed to download.
         /// </summary>
-        public Vector2 PositionXY
-        {
-            get
-            {
-                return new Vector2(PositionX, PositionY);
-            }
-        }
-
-        public int GridPositionX
-        {
-            get
-            {
-                return (int) Math.Round((double)PositionX);
-            }
-        }
-
-        public int GridPositionY
-        {
-            get
-            {
-                return (int)Math.Round((double)PositionY);
-            }
-        }
+        public string Status = null;
 
         /// <summary>
         /// a set of mirrors for PackedFileURL
@@ -190,7 +150,7 @@ namespace IndiegameGarden.Base
             get
             {
                 if (IsBundleItem)
-                    return GardenConfig.Instance.BundleDataPath;
+                    return GardenConfig.Instance.BundleExesPath;
                 else
                     return GardenConfig.Instance.PackedFilesFolder;
             }
@@ -205,7 +165,7 @@ namespace IndiegameGarden.Base
             set
             {
                 description = value;
-                lineCount = TTUtil.LineCount(description);
+                lineCount = -1;
             }
         }
 
@@ -243,54 +203,6 @@ namespace IndiegameGarden.Base
                     return GameID;
                 else
                     return GameID + "_v" + Version;
-            }
-        }
-
-        /// <summary>
-        /// check whether a 2D coordinate position for game is explicitly given, or not
-        /// </summary>
-        public bool IsPositionGiven
-        {
-            get
-            {
-                return (PositionX != 0f) || (PositionY != 0f);
-            }
-        }
-
-        /// <summary>
-        /// check whether a 2D coordinate position delta for game is explicitly given, or not
-        /// </summary>
-        public bool IsPositionDeltaGiven
-        {
-            get
-            {
-                return (PositionDeltaX != 0f) || (PositionDeltaY != 0f);
-            }
-        }
-
-        public Vector2 Position
-        {
-            get
-            {
-                return new Vector2(PositionX,PositionY);
-            }
-            set
-            {
-                PositionX = value.X;
-                PositionY = value.Y;
-            }
-        }
-
-        public Vector2 PositionDelta
-        {
-            get
-            {
-                return new Vector2(PositionDeltaX, PositionDeltaY);
-            }
-            set
-            {
-                PositionDeltaX = value.X;
-                PositionDeltaY = value.Y;
             }
         }
 
@@ -333,7 +245,6 @@ namespace IndiegameGarden.Base
                     return Path.Combine(GameFolder , CdPath , ExeFile);
             }
         }
-
 
         /// <summary>
         /// check whether this game is locally installed, if true it is. Use Refresh() to
@@ -393,17 +304,6 @@ namespace IndiegameGarden.Base
         }
 
         /// <summary>
-        /// check whether this is a gamelib for igg
-        /// </summary>
-        public bool IsGameLib
-        {
-            get
-            {
-                return GameID.StartsWith("gwg_gamelib");
-            }
-        }
-
-        /// <summary>
         /// check whether this game can be grown at all (i.e. downloaded and/or unpacked).
         /// Some items may not be growable e.g. display-icon-only games, system items, or coming-soon items.
         /// </summary>
@@ -413,8 +313,6 @@ namespace IndiegameGarden.Base
             {
                 if (IsSystemPackage)
                 {
-                    if (IsGameLib)
-                        return true;
                     return false;
                 }
                 return true;
@@ -432,7 +330,7 @@ namespace IndiegameGarden.Base
                     return false;
                 if(ExeFile.ToLower().EndsWith(".exe"))
                     return true;
-                if (IsSectionId || IsMusic )
+                if (IsMusic )
                     return false;
                 return true; // for games that don't specify their .exe file.                
             }
@@ -461,31 +359,6 @@ namespace IndiegameGarden.Base
             }
         }
 
-
-        /// <summary>
-        /// checks for item of type SectionID.
-        /// </summary>
-        public bool IsSectionId
-        {
-            get
-            {
-                return GameID.StartsWith("section_");
-            }
-        }
-
-        /// <summary>
-        /// checks whether this item is visible to the user, depending on a.o. user's 
-        /// client version and other properties of the item
-        /// </summary>
-        public bool IsVisible
-        {
-            get
-            {
-                return  (!IsSectionId) && 
-                        (VisibilityLabel > 0);
-            }
-        }
-
         /// <summary>
         /// checks whether this item is a bundle-item, which means it is a single .exe
         /// and can be stored in another location i.e. the GardenConfig.BundleDataPath
@@ -505,7 +378,7 @@ namespace IndiegameGarden.Base
         {
             get
             {
-                string s = ExtractFileExtension(packedFileURL);
+                string s = Util.Util.ExtractFileExtension(packedFileURL);
                 return s;
             }
         }
@@ -520,7 +393,7 @@ namespace IndiegameGarden.Base
             {
                 // if bundle, then special path
                 if (IsBundleItem)
-                    return GardenConfig.Instance.BundleDataPath;
+                    return GardenConfig.Instance.BundleExesPath;
                 string folder;
                 folder = GardenConfig.Instance.UnpackedFilesFolder;
                 // if has own folder, then don't return a folder based on GameID
@@ -549,7 +422,7 @@ namespace IndiegameGarden.Base
                 if (thumbnailURL.Length > 0)
                 {
                     // if thumbnail url given, use the file format extension for generating local thumbnail file name.
-                    string ext = ExtractFileExtension(thumbnailURL);
+                    string ext = Util.Util.ExtractFileExtension(thumbnailURL);
                     return GameIDwithVersion + "." + ext;
                 }
                 else
@@ -559,22 +432,6 @@ namespace IndiegameGarden.Base
             }
         }
 
-        // extract an extension e.g. "zip" from a partial or full URL e.g. http://server/test/name.zip 
-        // <returns>extension after last dot, or default "zip" if no dot found in 'urlDl'.</returns>
-        private string ExtractFileExtension(string url)
-        {
-            int i = url.LastIndexOf('.');
-            if (i == -1)
-                return "zip";
-            string s = url.Substring(i + 1);
-            if (s.Length > 3)
-            {
-                return "zip"; // HACK - if no ext found, assume zip.
-            }
-            return s;
-        }
-
-
         /// <summary>
         /// refresh information by reading from local disk (e.g. installation status etc.)
         /// </summary>
@@ -583,6 +440,7 @@ namespace IndiegameGarden.Base
             refreshInstallationStatusNeeded = true;
         }
 
+        /*
         public void dummyCodeTODO() {
             // update with default mirror location, only if a main location is defined
             // if no main location is given, use default location as main DL location 
@@ -595,8 +453,8 @@ namespace IndiegameGarden.Base
                 packedFileMirrors.Add( defaultDownloadLoc );
             else
                 PackedFileURL = defaultDownloadLoc;
-
         }
+         */
 
     }
 }

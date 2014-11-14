@@ -125,16 +125,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\GameCollection.cs" />
-    <Compile Include="Base\GameFilter.cs" />
+    <Compile Include="Base\GardenItemCollection.cs" />
     <Compile Include="Base\GameLauncherTask.cs" />
-    <Compile Include="Base\GameLibrary.cs" />
     <Compile Include="Base\GardenConfig.cs" />
     <Compile Include="Base\GardenItem.cs" />
     <Compile Include="Base\ITask.cs" />
     <Compile Include="Base\SiteLauncherTask.cs" />
     <Compile Include="Base\Task.cs" />
     <Compile Include="Base\ThreadedTask.cs" />
+    <Compile Include="Game1Factory.cs" />
     <Compile Include="Download\BaseDownloader.cs" />
     <Compile Include="Download\BaseProtocolProvider.cs" />
     <Compile Include="Download\FtpProtocolProvider.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="Unpack\UnzipTask.cs" />
     <Compile Include="Util\HttpPost.cs" />
     <Compile Include="Util\RandomMath.cs" />
+    <Compile Include="Util\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

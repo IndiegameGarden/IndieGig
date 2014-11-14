@@ -1,7 +1,7 @@
 // (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 using System;
 
-namespace Game1
+namespace IndiegameGarden
 {
 #if WINDOWS || XBOX
     static class Program

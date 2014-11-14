@@ -81,7 +81,7 @@ namespace IndiegameGarden.Base
                 status = ITaskStatus.FAIL;
                 doAbort = true;
                 AbortInternal();
-                statusMsg = "download aborted";
+                statusMsg = "task aborted";
             }
         }
 

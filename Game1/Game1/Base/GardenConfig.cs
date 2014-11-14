@@ -14,26 +14,18 @@ namespace IndiegameGarden.Base
     {
          
         /// <summary>
-        /// value is constant for a build! update this manually for new version builds. Assembly version number
-        /// will be "1.value.x"
-        /// 1 = ALPHA-1
-        /// 2 = ALPHA-2
-        /// 3 = ALPHA-3
-        /// 4 = BETA-4
-        /// 5 = BETA-5
-        /// 6 = BETA-6
-        /// 7 = Indiegame Garden 7
-        /// 8 = GWG
-        /// 9 = Bento
-        /// etc.
+        /// value is constant for a build! update this manually for new version builds. 
         /// </summary>
-        public const int IGG_CLIENT_VERSION = 9;
+        protected const int VERSION = 1;
 
         /// <summary>
         /// specifies relative folder from which to copy files to the DataPath folder during init
         /// </summary>
-        public const string COPY_FILES_SRC_PATH = "."; 
-        
+        protected const string COPY_FILES_SRC_PATH = "."; 
+  
+        /// <summary>
+        /// the instance
+        /// </summary>
         protected static GardenConfig instance = null;
 
         public GardenConfig()
@@ -56,102 +48,57 @@ namespace IndiegameGarden.Base
         }
 
         /// <summary>
-        /// First init with only default values put into field. May be overwritten later by InitFromJSON()
+        /// First init with only default values put into field. May be overwritten later
         /// </summary>
         protected void InitDefaults()
         {
-            // NOTE DataPath should be set FIRST of all.
-            //DataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "IndiegameGarden");
-            DataPath = "../../../../..";
-            DataPath = Path.GetFullPath(DataPath);
-            // For bundle .exe files, save in same folder as Indiegame Garden exe (nice for collecting them)
-            BundleDataPath = Path.GetFullPath(".");
+            string TempPath = Path.Combine(Path.GetTempPath(), "IndiegameGarden");
+            TempPath = Path.GetFullPath(TempPath);
 
-            PackedFilesFolder = GetFolder("zips");
-            UnpackedFilesFolder = GetFolder("Bento");
-            ThumbnailsFolder = GetFolder("thumbs");
-
-            GameLibraryFilename = "gamelib.json";
-            GameLibraryFilenameBin = "gamelib.bin";
+            // For bundle single .exe files, save in same folder as Indiegame Garden exe (nice for collecting them)
+            BundleExesPath = Path.GetFullPath(".");
+            PackedFilesFolder = Path.GetFullPath("zips");
+            UnpackedFilesFolder = TempPath;
+            ThumbnailsFolder = Path.GetFullPath("thumbs");
 
             PackedFilesServerURL = "http://indie.indiegamegarden.com/zips/";
             BundleFilesServerURL = "http://www.indiegamegarden.com/";
 
-            //jsonFilePath = Path.Combine("config/gamelib_fmt4", ConfigFilename);
-
         }
 
         /// <summary>
-        /// verify that the IGG data path is valid. If needed, create directories to get a valid
-        /// data path.
+        /// verify that the IGG storage folders valid. If needed, create folders 
         /// </summary>
-        /// <returns>true if proper datapath existence was verified, false if not (and could not be created)</returns>
-        public bool VerifyDataPath()
+        /// <returns>true if folders' existence was verified, false if not (and could not be created)</returns>
+        public bool VerifyStorageFolders()
         {
             // verify and/or create all individual folders
-            if (!VerifyFolder(".")) return false;
-            if (!VerifyFolder("thumbs")) return false;
-            if (!VerifyFolder("zips")) return false;
-            if (!VerifyFolder("Bento")) return false;
+            if (!VerifyFolder(ThumbnailsFolder)) return false;
+            if (!VerifyFolder(PackedFilesFolder)) return false;
+            if (!VerifyFolder(UnpackedFilesFolder)) return false;
 
             return true;
         }
 
         /// <summary>
-        /// helper method that copies all files from given folderName from the local program install folder location
-        /// to the external DataPath folder location.
+        /// helper method to verify a single folder existence, creating it if needed
         /// </summary>
-        /// <param name="folderName"></param>
-        /// <returns>true if copy succeeded or not needed anymore or source folder not present,
-        /// false when copy failed</returns>
-        protected bool CopyFiles(string folderName)
-        {
-            try
-            {
-                string src = Path.GetFullPath(Path.Combine(COPY_FILES_SRC_PATH, folderName));
-                if (!Directory.Exists(src))
-                    return true;
-                string dest = Path.GetFullPath(Path.Combine(DataPath, folderName));
-                // check if source, dest not identical
-                if (!src.Equals(dest))
-                {
-                    string[] files = Directory.GetFiles(src);
-                    foreach (string filepath in files)
-                    {
-                        string filename = Path.GetFileName(filepath);
-                        string destFile = Path.Combine(dest, filename);
-                        if (!File.Exists(destFile))
-                            File.Copy(filepath, destFile, false);  // set to NOT overwrite any existing file of same name
-                    }
-                }
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// helper method to verify a single folder used by VerifyDataPath()
-        /// </summary>
-        /// <param name="folderName">a simple folder name no path e.g. "config" or "." within the DataPath</param>
+        /// <param name="folderName">folder name</param>
         /// <returns>true if folder exists or could be created, false if not exists and could not be created</returns>
         protected bool VerifyFolder(string folderName)
         {
-            string p = GetFolder(folderName);
-            if (!Directory.Exists(p))
+            if (!Directory.Exists(folderName))
             {
                 try
                 {
-                    Directory.CreateDirectory(p);
+                    Directory.CreateDirectory(folderName);
                 }
                 catch (Exception)
                 {
                     return false;
                 }
             }
-            if (Directory.Exists(p))
+            if (Directory.Exists(folderName))
                 return true;
             else
                 return false;
@@ -167,14 +114,9 @@ namespace IndiegameGarden.Base
         }
 
         /// <summary>
-        /// a folder path, abs or rel, pointing to the location where all below defined data folders are present
+        /// a folder path, abs or rel, pointing to the bundle location where all bundle .exe file downloads go to
         /// </summary>
-        public string DataPath { get; set; }
-
-        /// <summary>
-        /// a folder path, abs or rel, pointing to the bundle location where all .exe file downloads go to
-        /// </summary>
-        public string BundleDataPath { get; set; }
+        public string BundleExesPath { get; set; }
 
         /// <summary>
         /// abs folder path name where packed files (zip, rar, etc) of games are stored
@@ -192,21 +134,11 @@ namespace IndiegameGarden.Base
         public string ThumbnailsFolder { get; set; } 
 
         /// <summary>
-        /// name of the game library JSON file
-        /// </summary>
-        public string GameLibraryFilename { get; set; }
-
-        /// <summary>
-        /// name of the binary version of game library file
-        /// </summary>
-        public string GameLibraryFilenameBin { get; set; }
-
-        /// <summary>
         /// returns the version of current running client
         /// </summary>
         public int ClientVersion { 
             get {
-                return IGG_CLIENT_VERSION;
+                return VERSION;
             }
         }
 
@@ -215,16 +147,6 @@ namespace IndiegameGarden.Base
         /// </summary>
         public string PackedFilesServerURL { get; set; }
         public string BundleFilesServerURL { get; set; }
-
-        /// <summary>
-        /// prepend the DataPath location to a simple folder name, in order to locate the folder properly
-        /// </summary>
-        /// <param name="folderName">any folder name e.g. ConfigFilesFolder or PackedFilesFolder</param>
-        /// <returns>folderName prepended with the DataPath</returns>
-        protected string GetFolder(string folderName)
-        {
-            return Path.Combine(DataPath , folderName);
-        }
 
         /// <summary>
         /// get file path to locally stored thumbnail file for game
