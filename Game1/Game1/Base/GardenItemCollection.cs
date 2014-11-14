@@ -29,7 +29,7 @@ namespace IndiegameGarden.Base
         {
             foreach (GardenItem gi in this)
             {
-                if (gi.GameID.Equals(gameID))
+                if (gi.ID.Equals(gameID))
                     return gi;
             }
             return null;

@@ -18,6 +18,8 @@ using Artemis;
 using Artemis.Interface;
 using TreeSharp;
 
+using IndiegameGarden.Base;
+
 namespace IndiegameGarden
 {
     /// <summary>
@@ -26,6 +28,7 @@ namespace IndiegameGarden
     public class Game1 : TTGame
     {
         public Game1Factory Factory;
+        public GardenConfig Config;
         Channel gameChannel;
 
         public Game1()
@@ -36,6 +39,12 @@ namespace IndiegameGarden
         protected override void Initialize()
         {
             Factory = Game1Factory.Instance;
+            Config = GardenConfig.Instance;
+            if (!Config.VerifyStorageFolders())
+            {
+                MsgBox.Show( Config.ClientName + " ERROR", "Could not create required temp folder:\n" + Config.TempFolder);
+                Exit();
+            }
             base.Initialize();
         }
 

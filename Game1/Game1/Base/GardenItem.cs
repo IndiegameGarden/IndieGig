@@ -19,9 +19,9 @@ namespace IndiegameGarden.Base
     public class GardenItem: IDisposable
     {
         /// <summary>
-        /// internally used string ID for game, no whitespace allowed
+        /// internally used string ID for item, no whitespace allowed
         /// </summary>
-        public string GameID = "";
+        public string ID = "";
 
         /// <summary>
         /// Name of game
@@ -200,9 +200,9 @@ namespace IndiegameGarden.Base
             get
             {
                 if (Version == 1)
-                    return GameID;
+                    return ID;
                 else
-                    return GameID + "_v" + Version;
+                    return ID + "_v" + Version;
             }
         }
 
@@ -220,8 +220,9 @@ namespace IndiegameGarden.Base
         private bool isInstalled = false;
         private bool refreshInstallationStatusNeeded = true;
 
-        protected GardenItem()
-        {            
+        public GardenItem(string id)
+        {
+            this.ID = id;
         }
 
         public void Dispose()
@@ -355,7 +356,7 @@ namespace IndiegameGarden.Base
         {
             get
             {
-                return GameID.StartsWith("igg");
+                return ID.StartsWith("igg");
             }
         }
 

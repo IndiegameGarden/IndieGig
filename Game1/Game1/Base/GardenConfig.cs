@@ -12,11 +12,15 @@ namespace IndiegameGarden.Base
      */
     public class GardenConfig
     {
-         
+        /// <summary>
+        /// name of the current client (and current version)
+        /// </summary>
+        protected const string NAME = "IndieGig";
+
         /// <summary>
         /// value is constant for a build! update this manually for new version builds. 
         /// </summary>
-        protected const int VERSION = 1;
+        protected const int VERSION = 10;
 
         /// <summary>
         /// specifies relative folder from which to copy files to the DataPath folder during init
@@ -52,13 +56,12 @@ namespace IndiegameGarden.Base
         /// </summary>
         protected void InitDefaults()
         {
-            string TempPath = Path.Combine(Path.GetTempPath(), "IndiegameGarden");
-            TempPath = Path.GetFullPath(TempPath);
+            TempFolder = Path.GetFullPath( Path.Combine(Path.GetTempPath(), ClientName) );
 
             // For bundle single .exe files, save in same folder as Indiegame Garden exe (nice for collecting them)
             BundleExesPath = Path.GetFullPath(".");
             PackedFilesFolder = Path.GetFullPath("zips");
-            UnpackedFilesFolder = TempPath;
+            UnpackedFilesFolder = TempFolder;
             ThumbnailsFolder = Path.GetFullPath("thumbs");
 
             PackedFilesServerURL = "http://indie.indiegamegarden.com/zips/";
@@ -114,6 +117,11 @@ namespace IndiegameGarden.Base
         }
 
         /// <summary>
+        /// a temp folder that is created by client to store files/folders
+        /// </summary>
+        public string TempFolder { get; set; }
+
+        /// <summary>
         /// a folder path, abs or rel, pointing to the bundle location where all bundle .exe file downloads go to
         /// </summary>
         public string BundleExesPath { get; set; }
@@ -134,11 +142,22 @@ namespace IndiegameGarden.Base
         public string ThumbnailsFolder { get; set; } 
 
         /// <summary>
-        /// returns the version of current running client
+        /// returns the version of current running IndiegameGarden client
         /// </summary>
         public int ClientVersion { 
             get {
                 return VERSION;
+            }
+        }
+
+        /// <summary>
+        /// returns the name of current running IndiegameGarden client
+        /// </summary>
+        public string ClientName
+        {
+            get
+            {
+                return NAME;
             }
         }
 

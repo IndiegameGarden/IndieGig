@@ -142,6 +142,7 @@
     <Compile Include="Download\HttpProtocolProvider.cs" />
     <Compile Include="Download\IHttpFtpProtocolParameters.cs" />
     <Compile Include="Download\ProxyParameters.cs" />
+    <Compile Include="IndieGigCollection.cs" />
     <Compile Include="Install\GameDownloadAndInstallTask.cs" />
     <Compile Include="Install\InstallTask.cs" />
     <Compile Include="Program.cs">
@@ -210,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Comps\" />
-    <Folder Include="Levels\" />
     <Folder Include="Systems\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
