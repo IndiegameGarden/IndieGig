@@ -12,6 +12,11 @@ namespace IndiegameGarden.Base
      */
     public class GardenConfig
     {
+#if DEBUG
+        protected const string DEBUG_PATH = "..\\..\\..\\..\\..\\";
+#else
+        protected const string DEBUG_PATH = "";
+#endif
         /// <summary>
         /// name of the current client (and current version)
         /// </summary>
@@ -60,9 +65,9 @@ namespace IndiegameGarden.Base
 
             // For bundle single .exe files, save in same folder as Indiegame Garden exe (nice for collecting them)
             BundleExesPath = Path.GetFullPath(".");
-            PackedFilesFolder = Path.GetFullPath("zips");
+            PackedFilesFolder = Path.GetFullPath( DEBUG_PATH + "zips");
             UnpackedFilesFolder = TempFolder;
-            ThumbnailsFolder = Path.GetFullPath("thumbs");
+            ThumbnailsFolder = Path.GetFullPath( DEBUG_PATH + "thumbs");
 
             PackedFilesServerURL = "http://indie.indiegamegarden.com/zips/";
             BundleFilesServerURL = "http://www.indiegamegarden.com/";

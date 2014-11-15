@@ -8,7 +8,7 @@ using IndiegameGarden.Base;
 
 namespace Game1
 {
-    class IndieGigCollection: GardenItemCollection
+    public class IndieGigCollection: GardenItemCollection
     {
         public IndieGigCollection()
         {
@@ -30,6 +30,7 @@ namespace Game1
         private GardenItem CreateItem(string id)
         {
             GardenItem g = new GardenItem(id);
+            Add(g);
             return g;
         }
     }

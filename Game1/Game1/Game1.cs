@@ -20,7 +20,7 @@ using TreeSharp;
 
 using IndiegameGarden.Base;
 
-namespace IndiegameGarden
+namespace Game1
 {
     /// <summary>
     /// Main game class for IndieGig
@@ -29,6 +29,7 @@ namespace IndiegameGarden
     {
         public Game1Factory Factory;
         public GardenConfig Config;
+        public IndieGigCollection Collection;
         Channel gameChannel;
 
         public Game1()
@@ -45,6 +46,8 @@ namespace IndiegameGarden
                 MsgBox.Show( Config.ClientName + " ERROR", "Could not create required temp folder:\n" + Config.TempFolder);
                 Exit();
             }
+            Collection = new IndieGigCollection();
+
             base.Initialize();
         }
 
@@ -63,23 +66,12 @@ namespace IndiegameGarden
             // game channel
             gameChannel = TTFactory.CreateChannel(Color.White, false);
             ChannelMgr.AddChannel(gameChannel);
-            gameChannel.ZapTo(); 
+            gameChannel.ZapTo();
+            TTFactory.BuildTo(gameChannel);
 
-            // add framerate counter
-            FrameRateCounter.Create(Color.Black);
+            // create collection onto channel
+            Factory.CreateCollection(Collection);
 
-            // add several sprites             
-            for (float x = 0.1f; x < 1.6f; x += 0.3f)
-            {
-                for (float y = 0.1f; y < 1f; y += 0.24f)
-                {
-                    var pos = new Vector2(x * gameChannel.Screen.Width, y * gameChannel.Screen.Height);
-                    Factory.CreateHyperActiveBall(pos);
-                    Factory.CreateMovingTextlet(pos,"This is the\nTTengine test. !@#$1234");
-                    //break;
-                }
-                //break;
-            }
         }       
 
     }

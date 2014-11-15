@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
-using System.Text;
+using System;
+using System.Collections.Generic;
 
 namespace TTengine.Systems
 {
