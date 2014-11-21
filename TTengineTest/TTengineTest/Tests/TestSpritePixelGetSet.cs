@@ -44,8 +44,8 @@ namespace TTengineTest
         {
             // pick a random pixel
             var sc = context.Entity.GetComponent<SpriteComp>();
-            int x = RandomMath.RandomIntBetween(0, (int)sc.Width);
-            int y = RandomMath.RandomIntBetween(0, (int)sc.Height);
+            int x = RandomMath.RandomIntBetween(0, sc.Width);
+            int y = RandomMath.RandomIntBetween(0, sc.Height);
             Color c = sc.GetPixel(x, y);
 
             // change its color

@@ -53,6 +53,7 @@ namespace Game1
             e.AddComponent(new ScaleComp(scale));
             e.AddComponent(new TargetMotionComp());
             e.AddComponent(new GardenItemComp(gi));
+            e.GetComponent<SpriteComp>().CenterToMiddle();
             return e;
         }
 

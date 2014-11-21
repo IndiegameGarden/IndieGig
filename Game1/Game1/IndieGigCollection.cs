@@ -25,6 +25,10 @@ namespace Game1
             g = CreateItem("FoxAliens");
             g.Name = "Fox Aliens";
             g.ExeFile = "FOXLZRS.exe";
+
+            g = CreateItem("Testgame");
+            g.Name = "Test game 1";
+            g.ExeFile = "testgame.exe";
         }
 
         private GardenItem CreateItem(string id)

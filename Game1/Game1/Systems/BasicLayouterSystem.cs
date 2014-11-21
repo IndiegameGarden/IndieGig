@@ -19,19 +19,23 @@ namespace Game1.Systems
     [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 5)]
     class BasicLayouterSystem : EntityComponentProcessingSystem<GardenItemComp,TargetMotionComp>
     {
-        public static float Dx = 32f;
-        public static float Dy = 32f;
+        public static float Dx = 256f;
+        public static float Dy = 256f;
 
         protected int xPos, yPos, xPosMax = 6;
 
         protected override void Begin()
         {
-            xPos = 0;
-            yPos = 0;
+            xPos = 1;
+            yPos = 1;
         }
 
         public override void Process(Entity entity, GardenItemComp gc, TargetMotionComp tmc)
         {
+            // set entity to pos
+            tmc.Target = calcVector3Pos(xPos,yPos) ;
+            tmc.TargetVelocity = 100.0;
+
             // next position
             xPos++;
             if (xPos > xPosMax)
@@ -40,9 +44,6 @@ namespace Game1.Systems
                 yPos++;
             }
 
-            // set entity to pos
-            tmc.Target = calcVector3Pos(xPos,yPos) ;
-            tmc.TargetVelocity = 1.0;
         }
 
         private Vector3 calcVector3Pos(int x, int y)
