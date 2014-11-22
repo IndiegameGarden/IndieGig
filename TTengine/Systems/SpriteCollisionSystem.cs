@@ -83,16 +83,20 @@ namespace TTengine.Systems
             int cnt = allObj.Count;
             foreach (Entity e in entities.Values)
             {
-                e.GetComponent<SpriteComp>().Colliders.Clear();
-            }
-            for (int i1 = 0; i1 < cnt; i1++ )
-            {
-                for (int i2 = i1+1; i2 < cnt; i2++ )
-                {
-                    if (this.CollisionExists(allObj[i1], allObj[i2]))
+                var sc = e.GetComponent<SpriteComp>();
+                if (sc.IsCheckingCollisions) {
+                    sc.Colliders.Clear();
+                    foreach (Entity e2 in allObj)
                     {
-                        allObj[i1].GetComponent<SpriteComp>().Colliders.Add(allObj[i2]);
-                        allObj[i2].GetComponent<SpriteComp>().Colliders.Add(allObj[i1]);
+                        if (e.Equals(e2))
+                            continue;
+                        if (sc.Colliders.Contains(e2))
+                            continue;
+                        if (this.CollisionExists(e, e2))
+                        {
+                            sc.Colliders.Add(e2);
+                            e2.GetComponent<SpriteComp>().Colliders.Add(e);
+                        }
                     }
                 }
             }
@@ -110,8 +114,10 @@ namespace TTengine.Systems
             var d2 = entity2.GetComponent<DrawComp>();
             var s1 = entity1.GetComponent<SpriteComp>();
             var s2 = entity2.GetComponent<SpriteComp>();
-            Rectangle r1 = new Rectangle((int)Math.Round(d1.DrawPosition.X), (int)Math.Round(d1.DrawPosition.Y), s1.Width, s1.Height);
-            Rectangle r2 = new Rectangle((int)Math.Round(d2.DrawPosition.X), (int)Math.Round(d2.DrawPosition.Y), s2.Width, s2.Height);
+            Rectangle r1 = new Rectangle((int)Math.Round(d1.DrawPosition.X-s1.Center.X), 
+                                         (int)Math.Round(d1.DrawPosition.Y-s1.Center.Y), s1.Width, s1.Height);
+            Rectangle r2 = new Rectangle((int)Math.Round(d2.DrawPosition.X-s2.Center.X), 
+                                         (int)Math.Round(d2.DrawPosition.Y-s2.Center.Y), s2.Width, s2.Height);
             return IntersectPixels(r1, s1.TextureData, r2, s2.TextureData);            
         }
 

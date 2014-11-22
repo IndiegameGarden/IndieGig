@@ -28,7 +28,13 @@ namespace Game1
         public GardenConfig Config;
         public IndieGigCollection Collection;
         public Channel gameChannel;
-        
+        public Entity MousePointer;
+        public List<Entity> CollectionEntities;
+        public const double SCALE_SELECTED = 1.2,
+                            SCALE_SPEED_TO_SELECTED = 0.01,
+                            SCALE_UNSELECTED = 1.0,
+                            SCALE_SPEED_TO_UNSELECTED = 0.01;
+
         /// <summary>
         /// Init of basics: non-graphical, non-XNA, non-channel related 
         /// </summary>
@@ -59,11 +65,12 @@ namespace Game1
             gameChannel = TTFactory.CreateChannel(Color.White, false);
             ChannelMgr.AddChannel(gameChannel);
             gameChannel.ZapTo();
-            TTFactory.BuildTo(gameChannel);
-            gameChannel.World.SystemManager.GetSystem<SpriteCollisionSystem>().IsEnabled = true;
+            //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // create collection onto channel
-            Factory.CreateCollection(Collection);
+            CollectionEntities = Factory.CreateCollection(Collection);
+            // mouse entity
+            MousePointer = Factory.CreateMousePointer();
 
             base.LoadContent();
         }
@@ -73,8 +80,27 @@ namespace Game1
             KeyboardState kb = Keyboard.GetState();
             if (kb.IsKeyDown(Keys.Escape))
                 Exit();
-
+            GameSelectionProcess();
             base.Update(gameTime);
+        }
+
+        void GameSelectionProcess()
+        {
+            var coll = MousePointer.GetComponent<SpriteComp>().Colliders;
+            foreach (Entity e in CollectionEntities)
+            {
+                var sc = e.GetComponent<ScaleComp>();
+                if (coll.Contains(e))
+                {
+                    sc.ScaleTarget = SCALE_SELECTED;
+                    sc.ScaleSpeed = SCALE_SPEED_TO_SELECTED;
+                }
+                else
+                {
+                    sc.ScaleTarget = SCALE_UNSELECTED;
+                    sc.ScaleSpeed = SCALE_SPEED_TO_UNSELECTED;
+                }
+            }
         }
 
     }

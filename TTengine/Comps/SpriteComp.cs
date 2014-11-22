@@ -142,6 +142,11 @@ namespace TTengine.Comps
         }
 
         /// <summary>
+        /// Whether current sprite is checking for collisions with all other sprites, or not.
+        /// </summary>
+        public bool IsCheckingCollisions = false;
+
+        /// <summary>
         /// List of Entities that is currently colliding with this Entity(shape)
         /// </summary>
         public List<Entity> Colliders = new List<Entity>();
