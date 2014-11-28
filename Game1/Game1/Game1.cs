@@ -16,6 +16,7 @@ using Artemis;
 using Artemis.Interface;
 using TreeSharp;
 using IndiegameGarden.Base;
+using Game1.Comps;
 
 namespace Game1
 {
@@ -24,12 +25,21 @@ namespace Game1
     /// </summary>
     public class Game1 : TTGame
     {
+        public enum GlobalStateEnum
+        {
+            STATE_BROWSING,
+            STATE_LAUNCHING
+        }
         public Game1Factory Factory;
         public GardenConfig Config;
         public IndieGigCollection Collection;
-        public Channel gameChannel;
+        public Channel GameChannel;
         public Entity MousePointer;
-        public List<Entity> CollectionEntities;
+        public Entity SelectedGame;
+        public List<Entity> CollectionEntities; // all entities in game library
+        public GlobalStateEnum GlobalState;
+        public GameRunner GameRunner;
+
         public const double SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.01,
                             SCALE_UNSELECTED = 1.0,
@@ -42,8 +52,10 @@ namespace Game1
         {
             IsAudio = false;
             IsMouseVisible = true;
+            GlobalState = GlobalStateEnum.STATE_BROWSING;
             Factory = Game1Factory.Instance;
             Config = GardenConfig.Instance;
+            GameRunner = new GameRunner();
             if (!Config.VerifyStorageFolders())
             {
                 MsgBox.Show( Config.ClientName + " ERROR", "Could not create required temp folder:\n" + Config.TempFolder);
@@ -62,9 +74,9 @@ namespace Game1
             Collection = new IndieGigCollection();
 
             // game channel
-            gameChannel = TTFactory.CreateChannel(Color.White, false);
-            ChannelMgr.AddChannel(gameChannel);
-            gameChannel.ZapTo();
+            GameChannel = TTFactory.CreateChannel(Color.White, false);
+            ChannelMgr.AddChannel(GameChannel);
+            GameChannel.ZapTo();
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // create collection onto channel
@@ -80,20 +92,34 @@ namespace Game1
             KeyboardState kb = Keyboard.GetState();
             if (kb.IsKeyDown(Keys.Escape))
                 Exit();
-            GameSelectionProcess();
+            
+            switch (GlobalState)
+            {
+                case GlobalStateEnum.STATE_BROWSING:
+                    GameSelectionProcess();
+                    GameLaunchingProcess();
+                    break;
+
+                case GlobalStateEnum.STATE_LAUNCHING:
+                    GameRunProcess();
+                    break;
+            }
+            
             base.Update(gameTime);
         }
 
         void GameSelectionProcess()
         {
             var coll = MousePointer.GetComponent<SpriteComp>().Colliders;
+            SelectedGame = null;
             foreach (Entity e in CollectionEntities)
             {
                 var sc = e.GetComponent<ScaleComp>();
-                if (coll.Contains(e))
+                if (SelectedGame == null && coll.Contains(e))
                 {
                     sc.ScaleTarget = SCALE_SELECTED;
                     sc.ScaleSpeed = SCALE_SPEED_TO_SELECTED;
+                    SelectedGame = e;
                 }
                 else
                 {
@@ -103,6 +129,26 @@ namespace Game1
             }
         }
 
+        void GameLaunchingProcess()
+        {
+            KeyboardState kb = Keyboard.GetState();
+            MouseState ms = Mouse.GetState();
+
+            if (SelectedGame != null && ms.LeftButton == ButtonState.Pressed )
+            {
+                GlobalState = GlobalStateEnum.STATE_LAUNCHING;
+            }
+        }
+
+        /// <summary>
+        /// Once a game is selected for launch, this will install/run it
+        /// </summary>
+        void GameRunProcess()
+        {
+            GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
+            GameRunner.StartInstallRunTask(gi);
+            GlobalState = GlobalStateEnum.STATE_BROWSING; // TODO make waiting
+        }
     }
 
 }

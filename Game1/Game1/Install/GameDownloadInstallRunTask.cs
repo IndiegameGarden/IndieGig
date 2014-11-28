@@ -15,25 +15,21 @@ namespace IndiegameGarden.Install
 {
 
     /// <summary>
-    /// a Task to both download and install a game. If game file already exists locally, download is skipped.
+    /// a Task to download, then install, then run, a game. If game file already exists locally, download is skipped.
     /// If game is already installed locally, install is skipped.
     /// </summary>
-    public class GameDownloadAndInstallTask: Task
+    public class GameDownloadInstallRunTask: Task
     {
-        /// <summary>
-        /// how much of the progress percentage is allocated to downloading (remainder is for installing)
-        /// </summary>
-        const double FRACTION_OF_PROGRESS_FOR_DOWNLOAD = 0.80;
-
         InstallTask installTask;
         GameDownloader downloadTask;
+        GameLauncherTask runTask;
         GardenItem game;
 
         /// <summary>
         /// create new Download and Install task
         /// </summary>
         /// <param name="game">info of game to download and install</param>
-        public GameDownloadAndInstallTask(GardenItem game)
+        public GameDownloadInstallRunTask(GardenItem game)
         {
             this.game = game;
             status = ITaskStatus.CREATED;
@@ -43,66 +39,62 @@ namespace IndiegameGarden.Install
         {
             // do the checking if already installed
             game.Refresh();
-            if (game.IsInstalled)
+            if (!game.IsInstalled)
             {
-                status = ITaskStatus.SUCCESS;
-                return;
-            }
+                // do the download
+                downloadTask = new GameDownloader(game);
+                downloadTask.Start();
 
-            // start the download task
-            downloadTask = new GameDownloader(game);
-            downloadTask.Start();
-
-            if (downloadTask.IsSuccess() )
-            {
-                Thread.Sleep(100);
-
-                // check if folder already there
-                // if download ready and OK, start install
-                installTask = new InstallTask(game);
-                installTask.Start();
-                status = installTask.Status();
-                statusMsg = installTask.StatusMsg();
-
-                // install failed? remove the zip file and the game dir too
-                if (status == ITaskStatus.FAIL)
+                if (downloadTask.IsSuccess())
                 {
-                    string fn = game.PackedFilePath;
-                    if (fn != null && fn.Length > 0)
+                    Thread.Sleep(100);
+
+                    // check if folder already there
+                    // if download ready and OK, start install
+                    installTask = new InstallTask(game);
+                    installTask.Start();
+                    status = installTask.Status();
+                    statusMsg = installTask.StatusMsg();
+
+                    // install failed? remove the game dir
+                    // FIXME move to a cleanup task
+                    if (status == ITaskStatus.FAIL)
                     {
-                        try
+                        if (!game.IsBundleItem)
                         {
-                            File.Delete(fn);
-                        }
-                        catch (Exception)
-                        {
-                            ; // TODO?
-                        }
-                    }
-                    if (!game.IsBundleItem)
-                    {
-                        fn = game.ExeFolder; // the game dir
-                        if (fn != null && fn.Length > 0)
-                        {
-                            try
+                            string fn = game.ExeFolder; // the game dir
+                            if (fn != null && fn.Length > 0)
                             {
-                                Directory.Delete(fn, true);
-                            }
-                            catch (Exception)
-                            {
-                                ; // TODO?
+                                try
+                                {
+                                    Directory.Delete(fn, true);
+                                }
+                                catch (Exception)
+                                {
+                                    ; // TODO?
+                                }
                             }
                         }
                     }
                 }
+                else
+                {
+                    // error in downloading process - no install
+                    status = ITaskStatus.FAIL;
+                    statusMsg = downloadTask.StatusMsg();
+                }
+                game.Refresh();
+
             }
-            else
+
+            // ready to run
+            if (status != ITaskStatus.FAIL)
             {
-                // error in downloading process - no install
-                status = ITaskStatus.FAIL;
-                statusMsg = downloadTask.StatusMsg();
+                runTask = new GameLauncherTask(game);
+                runTask.Start();
+                status = runTask.Status();
+                statusMsg = runTask.StatusMsg();
             }
-            game.Refresh();
         }
 
         protected override void AbortInternal()
@@ -155,14 +147,12 @@ namespace IndiegameGarden.Install
         public override double Progress()
         {            
             if (IsDownloading())
-                return ProgressDownload() * FRACTION_OF_PROGRESS_FOR_DOWNLOAD;
+                return 0.0; // ProgressDownload() * FRACTION_OF_PROGRESS_FOR_DOWNLOAD;
             if (downloadTask != null && downloadTask.IsFinished())
             {
                 if (IsInstalling())
-                    return (ProgressInstall() * (1.0 - FRACTION_OF_PROGRESS_FOR_DOWNLOAD)) + FRACTION_OF_PROGRESS_FOR_DOWNLOAD;
-                if (installTask != null && installTask.IsFinished())
-                    return 1.0;
-                return FRACTION_OF_PROGRESS_FOR_DOWNLOAD; // since install did not start yet.
+                    return ProgressInstall();
+                return 1.0;
             }
             return 0.0;            
         }

@@ -205,17 +205,7 @@ namespace IndiegameGarden.Base
                     return ID + "_v" + Version;
             }
         }
-
-        /// <summary>
-        /// Optionally a download/install task ongoing for this game
-        /// </summary>
-        public GameDownloadAndInstallTask DlAndInstallTask = null;
-
-        /// <summary>
-        /// A ThreadedTask that wraps DlAndInstallTask, so that download/install happens in own thread.
-        /// </summary>
-        public ThreadedTask ThreadedDlAndInstallTask = null;
-
+        
         //-- private vars
         private bool isInstalled = false;
         private bool refreshInstallationStatusNeeded = true;
@@ -227,10 +217,7 @@ namespace IndiegameGarden.Base
 
         public void Dispose()
         {
-            if (ThreadedDlAndInstallTask != null)
-            {
-                ThreadedDlAndInstallTask.Abort();
-            }
+            //
         }
 
         /// <summary>
@@ -260,28 +247,10 @@ namespace IndiegameGarden.Base
 
                 if (refreshInstallationStatusNeeded) // avoid continuous calling of Directory.Exists via this mechanism
                 {
-                    isInstalled = File.Exists(ExeFilepath) && (DlAndInstallTask == null || DlAndInstallTask.IsFinished());
+                    isInstalled = File.Exists(ExeFilepath);
                     refreshInstallationStatusNeeded = false;
                 }
                 return isInstalled;
-            }
-        }
-
-        public float InstallProgress
-        {
-            get
-            {
-                if (ThreadedDlAndInstallTask != null)
-                {
-                    return (float) ThreadedDlAndInstallTask.Progress();
-                }
-                else
-                {
-                    if (IsInstalled)
-                        return 1f;
-                    else
-                        return 0f;
-                }
             }
         }
 
@@ -293,14 +262,6 @@ namespace IndiegameGarden.Base
             get
             {
                 return ExeFile.StartsWith("http://") || ExeFile.StartsWith("https://");
-            }
-        }
-
-        public bool IsInstalling
-        {
-            get
-            {
-                return (ThreadedDlAndInstallTask != null) && (!ThreadedDlAndInstallTask.IsFinished());
             }
         }
 

@@ -143,8 +143,10 @@
     <Compile Include="Download\HttpProtocolProvider.cs" />
     <Compile Include="Download\IHttpFtpProtocolParameters.cs" />
     <Compile Include="Download\ProxyParameters.cs" />
+    <Compile Include="GameRunner.cs" />
     <Compile Include="IndieGigCollection.cs" />
-    <Compile Include="Install\GameDownloadAndInstallTask.cs" />
+    <Compile Include="Install\GameInstallRunTask.cs" />
+    <Compile Include="Install\GameDownloadInstallRunTask.cs" />
     <Compile Include="Install\InstallTask.cs" />
     <Compile Include="Program.cs">
       <SubType>Code</SubType>
