@@ -34,7 +34,7 @@ namespace Game1.Systems
         {
             // set entity to pos
             tmc.Target = calcVector3Pos(xPos,yPos) ;
-            tmc.TargetVelocity = 100.0;
+            tmc.TargetVelocity = 3000.0;
 
             // next position
             xPos++;

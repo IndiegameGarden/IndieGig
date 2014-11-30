@@ -50,7 +50,7 @@ namespace Game1
         /// </summary>
         protected override void Initialize()
         {
-            IsAudio = false;
+            IsAudio = true;
             IsMouseVisible = true;
             GlobalState = GlobalStateEnum.STATE_BROWSING;
             Factory = Game1Factory.Instance;
@@ -83,6 +83,8 @@ namespace Game1
             CollectionEntities = Factory.CreateCollection(Collection);
             // mouse entity
             MousePointer = Factory.CreateMousePointer();
+            // music
+            Factory.CreateMusic();
 
             base.LoadContent();
         }

@@ -15,6 +15,7 @@ using TTengine.Comps;
 using TTengine.Behaviors;
 using TTengine.Modifiers;
 using TTengine.Util;
+using TTMusicEngine.Soundevents;
 using IndiegameGarden.Base;
 using Game1.Comps;
 
@@ -100,6 +101,16 @@ namespace Game1
         {
             ctx.Entity.GetComponent<DrawComp>().DrawRotation = (float)value;
         }
+
+        public Entity CreateMusic()
+        {
+            var soundScript = new SoundEvent("Music");
+            var ev = new SampleSoundEvent("music.ogg");
+            ev.Amplitude = 0.5;
+            soundScript.AddEvent(0.5, ev);
+            return TTFactory.CreateAudiolet(soundScript);
+        }
+
     }
 
 }
