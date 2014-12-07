@@ -42,7 +42,7 @@ namespace Game1
 
         public const double SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.01,
-                            SCALE_UNSELECTED = 1.0,
+                            SCALE_UNSELECTED = 0.7,
                             SCALE_SPEED_TO_UNSELECTED = 0.01;
 
         /// <summary>

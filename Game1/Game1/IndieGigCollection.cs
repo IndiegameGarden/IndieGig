@@ -29,6 +29,14 @@ namespace Game1
             g = CreateItem("lisa");
             g.Name = "Lisa";
             g.ExeFile = "lisa.exe";
+
+            g = CreateItem("spelunky");
+            g.Name = "Spelunky";
+            g.ExeFile = "Spelunky.exe";
+
+            g = CreateItem("RussianSubwayDogs");
+            g.Name = "Russian Subway Dogs";
+            g.ExeFile = "Russian Subway Dogs PKE.exe";
         }
 
         private GardenItem CreateItem(string id)

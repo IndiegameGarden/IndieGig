@@ -105,7 +105,7 @@ namespace Game1
         public Entity CreateMusic()
         {
             var soundScript = new SoundEvent("Music");
-            var ev = new SampleSoundEvent("music.ogg");
+            var ev = new SampleSoundEvent("star.ogg");
             ev.Amplitude = 0.5;
             soundScript.AddEvent(0.5, ev);
             return TTFactory.CreateAudiolet(soundScript);
