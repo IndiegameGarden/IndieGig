@@ -41,9 +41,9 @@ namespace Game1
         public GameRunner GameRunner;
 
         public const double SCALE_SELECTED = 1.2,
-                            SCALE_SPEED_TO_SELECTED = 0.01,
-                            SCALE_UNSELECTED = 0.7,
-                            SCALE_SPEED_TO_UNSELECTED = 0.01;
+                            SCALE_SPEED_TO_SELECTED = 0.1,
+                            SCALE_UNSELECTED = 1.0,
+                            SCALE_SPEED_TO_UNSELECTED = 0.1;
 
         /// <summary>
         /// Init of basics: non-graphical, non-XNA, non-channel related 
@@ -128,6 +128,9 @@ namespace Game1
                     sc.ScaleTarget = SCALE_UNSELECTED;
                     sc.ScaleSpeed = SCALE_SPEED_TO_UNSELECTED;
                 }
+
+                var dc = e.GetComponent<DrawComp>();
+                dc.LayerDepth = (float) ((SCALE_SELECTED-sc.Scale)/SCALE_SELECTED);
             }
         }
 

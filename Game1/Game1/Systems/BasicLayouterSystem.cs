@@ -19,8 +19,8 @@ namespace Game1.Systems
     [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = 5)]
     class BasicLayouterSystem : EntityComponentProcessingSystem<GardenItemComp,TargetMotionComp>
     {
-        public static float Dx = 196f;
-        public static float Dy = 196f;
+        public static float Dx = 128f;
+        public static float Dy = 128f;
 
         protected int xPos, yPos, xPosMax = 6;
 

@@ -52,6 +52,7 @@ namespace Game1
             String fn = Path.Combine ( GardenConfig.Instance.ThumbnailsFolder, gi.ThumbnailFile);
             Entity e = TTFactory.CreateSpritelet( fn );
             e.AddComponent(new ScaleComp(scale));
+            e.GetComponent<ScaleComp>().Scale = 0.1;
             e.AddComponent(new TargetMotionComp());
             e.AddComponent(new GardenItemComp(gi));
             e.GetComponent<SpriteComp>().CenterToMiddle();
