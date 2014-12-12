@@ -22,6 +22,27 @@ sampler_state
     AddressV = Clamp;
 };
 
+float hash( float n )
+{
+    return frac(sin(n)*43758.5453);
+}
+
+float noiseA( float3 x )
+{
+    // The noise function returns a value in the range -1.0f -> 1.0f
+
+    float3 p = floor(x);
+    float3 f = frac(x);
+
+    f       = f*f*(3.0-2.0*f);
+    float n = p.x + p.y*57.0 + 113.0*p.z;
+
+    return lerp(lerp(lerp( hash(n+0.0), hash(n+1.0),f.x),
+                   lerp( hash(n+57.0), hash(n+58.0),f.x),f.y),
+               lerp(lerp( hash(n+113.0), hash(n+114.0),f.x),
+                   lerp( hash(n+170.0), hash(n+171.0),f.x),f.y),f.z);
+}
+
 // shader uses 'color', the DrawColor, for special effects that are set per sprite:
 // color.a - transparency result 0...1
 // color.r - saturation 0...1 (0=black&white, 1=colored-full)
@@ -39,7 +60,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	float2 vDif = texCoord - Center ;
 	float2 vDifNorm = normalize(vDif);
 	float lDif = length(vDif);
-	lDif += NoiseLevel * noise(Time/3);
+	lDif += NoiseLevel * Time/3; //lerp(Time/3,color.x,color.y); //noise(Time/3);
 	float lWarped = (1-Velocity)*lDif + Velocity * lDif * lDif;
 	float t = -time;
 	float2 vTexSample = Center + (lWarped * vDifNorm) + (Velocity * t * 0.8334 * vDifNorm); 
@@ -105,6 +126,6 @@ technique Technique1
 {
     pass Pass1
     {
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
     }
 }
