@@ -60,7 +60,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	float2 vDif = texCoord - Center ;
 	float2 vDifNorm = normalize(vDif);
 	float lDif = length(vDif);
-	lDif += NoiseLevel * Time/3; //lerp(Time/3,color.x,color.y); //noise(Time/3);
+	//lDif += NoiseLevel * Time/3; //lerp(Time/3,color.x,color.y); //noise(Time/3);
 	float lWarped = (1-Velocity)*lDif + Velocity * lDif * lDif;
 	float t = -time;
 	float2 vTexSample = Center + (lWarped * vDifNorm) + (Velocity * t * 0.8334 * vDifNorm); 

@@ -23,11 +23,14 @@ namespace Game1.Systems
         public static float Dy = 128f;
 
         protected int xPos, yPos, xPosMax = 6;
+        protected float haloTime = 0f;
 
         protected override void Begin()
         {
             xPos = 1;
             yPos = 1;
+            double dt = TimeSpan.FromTicks(EntityWorld.Delta).TotalSeconds;
+            haloTime += (float)dt; // move the 'halo' of the icon onwards as long as it's visible.
         }
 
         public override void Process(Entity entity, GardenItemComp gc, TargetMotionComp tmc)
@@ -43,6 +46,16 @@ namespace Game1.Systems
                 xPos = 0;
                 yPos++;
             }
+
+            // draw color for fx shader
+            // this is a conversion from 'halotime' to the time format that can be given to the pixel shader
+            // via the 'draw color' parameter
+            Color col = entity.GetComponent<DrawComp>().DrawColor;
+            int t = (int)(haloTime * 256);
+            int c3 = t % 256;
+            int c2 = ((t - c3) / 256) % 256;
+            int c1 = ((t - c2 - c3) / 65536) % 256;
+            entity.GetComponent<DrawComp>().DrawColor = new Color(c1, c2, c3, col.A);
 
         }
 
