@@ -1,14 +1,18 @@
 // (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
+// variables set from the outside - must be same for all sprites in a batch rendered with this shader.
+// linear time - for animation control
+float Time = 0;
 // center constant
-const float2 Center = float2(0.5,0.5);
-
+float2 Center = float2(0.5,0.5);
+// radial motion noise
+float NoiseLevel = 0.005;
+// velocity of the outward running pixels effect
+float Velocity = 0.02;
 // size settings for the 'shadow box' border
-const float ShadowBoxWidth = 0.75/2;
-const float ShadowBoxHeight = 0.75/2;
-const float2 ShadowBoxScale = float2(0.6,0.6);
-const float BorderThickness = 18;		// lower nr is bigger border, typ. 21
-const float BorderReflection = 0.35;		// 0-1
+float ShadowBoxWidth = 0.7/2;
+float ShadowBoxHeight = 0.7/2;
+float2 ShadowBoxScale = float2(0.6,0.6);
 
 // modify the sampler state on the zero texture sampler, used by SpriteBatch
 sampler TextureSampler : register(s0) = 
@@ -29,8 +33,22 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 {
 	float4 tex = tex2D(TextureSampler, ((texCoord - Center)/ShadowBoxScale+Center) ) ;		  
 	float4 res ;
+	float time = color.r * 65536 + color.g*256 + color.b ;
+
 	float alpha ;
-	res = float4(1,1,1,1);
+	float2 vDif = texCoord - Center ;
+	float2 vDifNorm = normalize(vDif);
+	float lDif = length(vDif);
+	//lDif += NoiseLevel * (Time % 8.2398230923f); //noise(Time/3);
+	float lWarped = (1-Velocity)*lDif + Velocity * lDif * lDif;
+	float t = -time;
+	float2 vTexSample = Center + (lWarped * vDifNorm) + (Velocity * t * vDifNorm); 
+	res = tex2D(TextureSampler, vTexSample ) ;		  
+	alpha = 1-(1.95+sin(texCoord.x) + cos(texCoord.y) )*lDif; //2.0*lDif; //*lDif ;//*2.5;
+	if (alpha < 0)
+		alpha = 0;
+	res *= alpha;
+	res.a = alpha;
 	
 	// check for shadow box bounds
 	if ( texCoord.x < (Center.x + ShadowBoxWidth) &&
@@ -43,20 +61,20 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 			d = abs(texCoord.x - (Center.x-ShadowBoxWidth) );
 		else if (texCoord.x > Center.x)
 			d = abs(texCoord.x - (Center.x+ShadowBoxWidth) );
-		float c = 1-BorderThickness*d;
+		float c = 1-21*d;
 		if (c<0) c=0;
 		
 		if (texCoord.y < Center.y)
 			d = abs(texCoord.y - (Center.y-ShadowBoxHeight) );
 		else if (texCoord.y > Center.y)
 			d = abs(texCoord.y - (Center.y+ShadowBoxHeight) );
-		float c2 = 1-BorderThickness*d;
+		float c2 = 1-21*d;
 
 		// use the best-case c/c2
 		if (c2<0) c2=0;
 		if (c2>c) c= c2;
 
-		res = sqrt(c)*res + (1-sqrt(c)) * ( (1-BorderReflection)*float4(0.23,0.23,0.19,1) + BorderReflection*tex); //float4(0.13,0.02,0.042,0);
+		res = sqrt(c)*res + (1-sqrt(c)) * float4(0.23,0.23,0.19,1); //float4(0.13,0.02,0.042,0);
 		if (c==0)
 		{
 			// copy the bitmap color as-is.
@@ -64,8 +82,21 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 		}
 	}
 	
+	// apply saturation technique http://lukhezo.com/2011/03/12/saturationdesaturation-with-hlslpixel-shaders-and-wpf/
+	/*
+	float alphaBackup = res.a;
+	float3  LuminanceWeights = float3(0.299,0.587,0.114);
+	float    luminance = dot(res,LuminanceWeights);
+	res = lerp(luminance, res, color.r);
+	// apply color fade
+	res *= color.g;
+	//retain the alpha
+	res.a = alphaBackup * color.a;
+	*/
+	//res *= color;
+
 	// apply alpha factor
-	res *= color; 
+	res *= color.a; 
 	return res ;
 
 }
@@ -74,6 +105,6 @@ technique Technique1
 {
     pass Pass1
     {
-        PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
+        PixelShader = compile ps_4_0_level_9_3 PixelShaderFunction();
     }
 }

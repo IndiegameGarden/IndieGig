@@ -68,7 +68,6 @@ namespace Game1
         {
             var iconsLayer = TTFactory.CreateFxScreenlet("GameIcon");
             Effect fx = iconsLayer.GetComponent<ScreenComp>().SpriteBatch.effect;
-            fx.Parameters["Velocity"].SetValue(0.09f);
             TTFactory.AddScript(iconsLayer, GameIconFxParametersScript);
             return iconsLayer;
         }
@@ -80,7 +79,7 @@ namespace Game1
         void GameIconFxParametersScript(ScriptContext ctx)
         {
             Effect fx = ctx.Entity.GetComponent<ScreenComp>().SpriteBatch.effect;
-            fx.Parameters["Time"].SetValue((float)ctx.SimTime);
+            //fx.Parameters["Time"].SetValue((float)ctx.SimTime);
         }
 
         /// <summary>

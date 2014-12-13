@@ -47,6 +47,7 @@ namespace Game1.Systems
                 yPos++;
             }
 
+            /*
             // draw color for fx shader
             // this is a conversion from 'halotime' to the time format that can be given to the pixel shader
             // via the 'draw color' parameter
@@ -56,7 +57,7 @@ namespace Game1.Systems
             int c2 = ((t - c3) / 256) % 256;
             int c1 = ((t - c2 - c3) / 65536) % 256;
             entity.GetComponent<DrawComp>().DrawColor = new Color(c1, c2, c3, col.A);
-
+            */
         }
 
         private Vector3 calcVector3Pos(int x, int y)
