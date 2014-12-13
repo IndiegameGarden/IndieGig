@@ -60,6 +60,30 @@ namespace Game1
         }
 
         /// <summary>
+        /// Create the FxScreenlet (render layer) that holds the game icons
+        /// which provides the halo effect for icons, using a pixel shader.
+        /// </summary>
+        /// <returns></returns>
+        public Entity CreateIconsLayer()
+        {
+            var iconsLayer = TTFactory.CreateFxScreenlet("GameIcon");
+            Effect fx = iconsLayer.GetComponent<ScreenComp>().SpriteBatch.effect;
+            fx.Parameters["Velocity"].SetValue(0.09f);
+            TTFactory.AddScript(iconsLayer, GameIconFxParametersScript);
+            return iconsLayer;
+        }
+
+        /// <summary>
+        /// Script to update the parameters of the GameIcon.fx each update
+        /// </summary>
+        /// <param name="ctx"></param>
+        void GameIconFxParametersScript(ScriptContext ctx)
+        {
+            Effect fx = ctx.Entity.GetComponent<ScreenComp>().SpriteBatch.effect;
+            fx.Parameters["Time"].SetValue((float)ctx.SimTime);
+        }
+
+        /// <summary>
         /// Instantiate a whole collection of garden items as Entities in the world
         /// </summary>
         /// <param name="col">the collection to instantiate</param>

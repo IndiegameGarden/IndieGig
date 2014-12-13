@@ -80,7 +80,8 @@ namespace Game1
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // create collection onto channel
-            var iconsLayer = TTFactory.CreateFxScreenlet("GameIcon");
+            var iconsLayer = Factory.CreateIconsLayer();
+            //
             TTFactory.BuildTo(iconsLayer.GetComponent<ScreenComp>());
             CollectionEntities = Factory.CreateCollection(Collection);
             TTFactory.BuildTo(GameChannel);
