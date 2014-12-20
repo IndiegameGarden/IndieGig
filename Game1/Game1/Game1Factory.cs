@@ -132,7 +132,9 @@ namespace Game1
             var ev = new SampleSoundEvent("star.ogg");
             ev.Amplitude = 0.5;
             soundScript.AddEvent(0.5, ev);
-            return TTFactory.CreateAudiolet(soundScript);
+            var e = TTFactory.CreateAudiolet(soundScript);
+            e.AddComponent(new AudioFadingComp());
+            return e;
         }
 
     }

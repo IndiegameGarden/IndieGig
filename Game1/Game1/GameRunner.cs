@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using TTengine.Comps;
 using IndiegameGarden.Base;
 using IndiegameGarden.Install;
 
@@ -22,6 +21,12 @@ namespace Game1
                 if (!GameRunTask.IsFinished())
                     return false; // stop, only one at a time!
             }
+
+            // fade out music
+            var afc = (Game1.Instance as Game1).Music.GetComponent<AudioFadingComp>();
+            afc.FadeTarget = 0;
+            afc.FadeSpeed = 0.2;
+            afc.IsFading = true;
 
             var installTask = new GameInstallRunTask(g);
             GameRunTask = new ThreadedTask(installTask);

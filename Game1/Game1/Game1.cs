@@ -36,6 +36,7 @@ namespace Game1
         public Channel GameChannel;
         public Entity MousePointer;
         public Entity SelectedGame;
+        public Entity Music;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
@@ -89,7 +90,7 @@ namespace Game1
             // mouse entity            
             MousePointer = Factory.CreateMousePointer();
             // music
-            Factory.CreateMusic();
+            Music = Factory.CreateMusic();
 
             base.LoadContent();
         }
