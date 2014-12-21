@@ -140,6 +140,13 @@
       <Processor>EffectProcessor</Processor>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ball-supernova2.png">
+      <Name>ball-supernova2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(ProjectDir)\MonoGame-Effect-build.bat $(ProjectDir) $(OutDir)</PostBuildEvent>

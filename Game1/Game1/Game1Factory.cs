@@ -137,6 +137,23 @@ namespace Game1
             return e;
         }
 
+        public Entity CreateBackgroundRotatingSpriteFx()
+        {
+            var fxLayer = TTFactory.CreateFxScreenlet("Background");
+            var sprite = TTFactory.CreateSpritelet("ball-supernova2");
+            sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
+            sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
+            sprite.GetComponent<SpriteComp>().CenterToMiddle();
+            var rc = new RotateComp();
+            rc.RotateSpeed = 0.05;
+            sprite.AddComponent(rc);
+            var sc = new ScaleComp();
+            sc.ScaleTarget = 4;
+            sc.ScaleSpeed = 0.1;
+            sprite.AddComponent(sc);
+            return sprite;
+        }
+
     }
 
 }

@@ -80,6 +80,9 @@ namespace Game1
             GameChannel.ZapTo();
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
+            // background
+            Factory.CreateBackgroundRotatingSpriteFx();
+
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
             //
