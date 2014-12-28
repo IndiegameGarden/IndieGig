@@ -55,7 +55,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 
 	//res = (1-alpha) * float4(0,0,0,1) + (alpha) * res;
 	//float alphaOut = 1 - alpha*alpha - bri ;
-	float alphaOut = 1 - (bri) ;
+	float alphaOut = 1 - (bri/3.0) ;
 	if (alphaOut < 0)
 		alphaOut = 0;
 	if (alphaOut > 1)

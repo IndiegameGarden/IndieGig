@@ -167,13 +167,13 @@ namespace Game1
             {
                 var sc_dest = BackgroundGameIcon.GetComponent<SpriteComp>();
                 var sc_src = SelectedGame.GetComponent<SpriteComp>();
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 200; i++)
                 {
                     int x = RandomMath.RandomIntBetween(0, sc_dest.Width);
                     int y = RandomMath.RandomIntBetween(0, sc_dest.Height);
                     Color px = sc_src.GetPixel(x, y);
                     Color px2 = sc_dest.GetPixel(x, y);
-                    sc_dest.SetPixel(x, y, Color.Lerp(px,px2,0.8f));
+                    sc_dest.SetPixel(x, y, Color.Lerp(px,px2,0.94f));
                 }
             }
         }
