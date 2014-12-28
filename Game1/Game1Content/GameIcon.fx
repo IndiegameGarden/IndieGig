@@ -30,7 +30,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	float4 tex = tex2D(TextureSampler, ((texCoord - Center)/ShadowBoxScale+Center) ) ;		  
 	float4 res ;
 	float alpha ;
-	res = float4(1,1,1,1);
+	res = float4(0,0,0,0);
 	
 	// check for shadow box bounds
 	if ( texCoord.x < (Center.x + ShadowBoxWidth) &&
@@ -38,6 +38,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 		 texCoord.y > (Center.y - ShadowBoxHeight) &&
 		 texCoord.y < (Center.y + ShadowBoxHeight) )
 	{
+		res.a=1;
 		float d=0;
 		if (texCoord.x < Center.x)
 			d = abs(texCoord.x - (Center.x-ShadowBoxWidth) );
@@ -56,16 +57,20 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 		if (c2<0) c2=0;
 		if (c2>c) c= c2;
 
-		res = sqrt(c)*res + (1-sqrt(c)) * ( (1-BorderReflection)*float4(0.23,0.23,0.19,1) + BorderReflection*tex); //float4(0.13,0.02,0.042,0);
+		res = c*res + (1-c) * ( (1-BorderReflection)*float4(0.23,0.23,0.19,0) + BorderReflection*tex); //float4(0.13,0.02,0.042,0);
 		if (c==0)
 		{
 			// copy the bitmap color as-is.
 			res=tex;
+		}else{
+			res.a = 1-c;
 		}
+	}else{
+		res = float4(0,0,0,0);
 	}
 	
 	// apply alpha factor
-	res *= color; 
+	//res *= color; 
 	return res ;
 
 }

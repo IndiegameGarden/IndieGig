@@ -37,6 +37,7 @@ namespace Game1
         public Entity MousePointer;
         public Entity SelectedGame;
         public Entity Music;
+        public Entity BackgroundGameIcon;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
@@ -81,7 +82,8 @@ namespace Game1
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // background
-            Factory.CreateBackgroundRotatingSpriteFx();
+            BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
+            Factory.CreateBackgroundRotatingStar();
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
@@ -109,6 +111,7 @@ namespace Game1
                 case GlobalStateEnum.STATE_BROWSING:
                     GameSelectionProcess();
                     GameLaunchingProcess();
+                    BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
@@ -131,6 +134,7 @@ namespace Game1
                     sc.ScaleTarget = SCALE_SELECTED;
                     sc.ScaleSpeed = SCALE_SPEED_TO_SELECTED;
                     SelectedGame = e;
+                    BackgroundGameIcon.GetComponent<SpriteComp>().CenterToMiddle();
                 }
                 else
                 {
@@ -151,6 +155,26 @@ namespace Game1
             if (SelectedGame != null && ms.LeftButton == ButtonState.Pressed )
             {
                 GlobalState = GlobalStateEnum.STATE_LAUNCHING;
+            }
+        }
+
+        /// <summary>
+        /// gradually set the texture of the selected game onto the BackgroundGameIcon
+        /// </summary>
+        void BackgroundGameIconNewTextureProcess()
+        {
+            if (SelectedGame != null)
+            {
+                var sc_dest = BackgroundGameIcon.GetComponent<SpriteComp>();
+                var sc_src = SelectedGame.GetComponent<SpriteComp>();
+                for (int i = 0; i < 100; i++)
+                {
+                    int x = RandomMath.RandomIntBetween(0, sc_dest.Width);
+                    int y = RandomMath.RandomIntBetween(0, sc_dest.Height);
+                    Color px = sc_src.GetPixel(x, y);
+                    Color px2 = sc_dest.GetPixel(x, y);
+                    sc_dest.SetPixel(x, y, Color.Lerp(px,px2,0.8f));
+                }
             }
         }
 

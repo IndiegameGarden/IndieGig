@@ -37,14 +37,31 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 {
 	float2 vDif = texCoord - Center ;
 	float4 res ;
-	float bri = (tex2D(TextureSampler, texCoord )).a ;
+	//float bri = (tex2D(TextureSampler, texCoord )).a ;
 	float2 vDifNorm = normalize(vDif);
 	float lDif = length(vDif);
-	float lWarped = (1+0.9*random(texCoord))*lDif;
-	//res = tex2D(TextureSampler, vTexSample ) ;		  
+	float lWarped = (1+0.1*random(texCoord))*lDif;
+	//res = tex2D(TextureSampler, (vDif/Scale+Center) ) ;		  
 	res  = tex2D(TextureSampler, (vDifNorm*lWarped/Scale+Center) ) ;		  
-	res.a = bri;
+	float bri = (res.r + res.g + res.b) / 3.0 ;
+	float alpha = res.a;
 
+	//res *= bri;
+	//res.a *= (1-bri);
+	//res = res.a * float4(1,1,1,0) + (1-res.a) * res;
+	//res = (1-res.a) * float4(1,1,1,0) + (res.a) * res;
+	//res = 1-res;
+	//res.a = 1;
+
+	//res = (1-alpha) * float4(0,0,0,1) + (alpha) * res;
+	//float alphaOut = 1 - alpha*alpha - bri ;
+	float alphaOut = 1 - (bri) ;
+	if (alphaOut < 0)
+		alphaOut = 0;
+	if (alphaOut > 1)
+		alphaOut = 1;
+	res *= alphaOut; // needed to get pre-multiplied alpha properly
+	res.a = alphaOut;
 	return res ;
 
 }

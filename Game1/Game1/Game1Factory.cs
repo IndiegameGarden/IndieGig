@@ -137,10 +137,10 @@ namespace Game1
             return e;
         }
 
-        public Entity CreateBackgroundRotatingSpriteFx()
+        public Entity CreateBackgroundRotatingStar()
         {
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
-            var sprite = TTFactory.CreateSpritelet("ball-supernova2");
+            var sprite = TTFactory.CreateSpritelet("supernova");
             sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
@@ -148,12 +148,31 @@ namespace Game1
             rc.RotateSpeed = 0.05;
             sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = 4;
+            sc.ScaleTarget = 2;
+            sc.ScaleSpeed = 0.1;
+            sprite.AddComponent(sc);
+
+            return sprite;
+        }
+
+        public Entity CreateBackgroundGameIcon()
+        {
+            var fxLayer = TTFactory.CreateFxScreenlet("Background");
+            var sprite = TTFactory.CreateSpritelet("supernova128");
+            sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
+            sprite.GetComponent<DrawComp>().LayerDepth = 0.7f;
+            sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
+            sprite.GetComponent<SpriteComp>().CenterToMiddle();
+            var rc = new RotateComp();
+            rc.RotateSpeed = 0.04;
+            sprite.AddComponent(rc);
+            var sc = new ScaleComp();
+            sc.ScaleTarget = 12;
             sc.ScaleSpeed = 0.1;
             sprite.AddComponent(sc);
             return sprite;
         }
 
-    }
+     }
 
 }
