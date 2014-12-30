@@ -27,12 +27,24 @@ namespace TTengine.Systems
         {
             if (afc.IsFading)
             {
-                double da = 0;
                 if (ac.Ampl < afc.FadeTarget)
-                    da = afc.FadeSpeed * dt;
+                {
+                    ac.Ampl += afc.FadeSpeed * dt;
+                    if (ac.Ampl > afc.FadeTarget)
+                    {
+                        ac.Ampl = afc.FadeTarget;
+                        afc.IsFading = false;
+                    }
+                }
                 else if (ac.Ampl > afc.FadeTarget)
-                    da = -afc.FadeSpeed * dt;
-                ac.Ampl += da;
+                {
+                    ac.Ampl -= afc.FadeSpeed * dt;
+                    if (ac.Ampl < afc.FadeTarget)
+                    {
+                        ac.Ampl = afc.FadeTarget;
+                        afc.IsFading = false;
+                    }
+                }
             }
         }
 
