@@ -6,7 +6,8 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using TTengine.Comps;
+using Game1;
 using IndiegameGarden.Download;
 using IndiegameGarden.Base;
 using MyDownloader.Core;
@@ -75,9 +76,16 @@ namespace IndiegameGarden.Install
             {
                 runTask = new GameLauncherTask(game);
                 runTask.Start();
+
                 status = runTask.Status();
                 statusMsg = runTask.StatusMsg();
             }
+            // fade in music
+            var afc = (Game1.Game1.Instance as Game1.Game1).Music.GetComponent<AudioFadingComp>();
+            afc.FadeTarget = 1;
+            afc.FadeSpeed = 0.2;
+            afc.IsFading = true;
+
         }
 
         protected override void AbortInternal()
