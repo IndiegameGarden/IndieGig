@@ -110,10 +110,13 @@ namespace Game1
 
         void MousePointerTrackingScript(ScriptContext ctx)
         {
-            MouseState ms = Mouse.GetState();
-            var pc = ctx.Entity.GetComponent<PositionComp>();
-            pc.X = ms.X;
-            pc.Y = ms.Y;
+            if (Game1.Instance.IsActive)
+            {
+                MouseState ms = Mouse.GetState();
+                var pc = ctx.Entity.GetComponent<PositionComp>();
+                pc.X = ms.X;
+                pc.Y = ms.Y;
+            }
         }
     
         void ScaleModifierScript(ScriptContext ctx, double value)
