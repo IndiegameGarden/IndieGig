@@ -176,6 +176,17 @@ namespace Game1
             return sprite;
         }
 
+        public Entity CreateWaitChannelBackground()
+        {
+            var sprite = TTFactory.CreateSpritelet("supernova");
+            sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
+            sprite.GetComponent<SpriteComp>().CenterToMiddle();
+            var sc = new ScaleComp();
+            sc.Scale = 12;
+            sprite.AddComponent(sc);
+            return sprite;
+        }
+
      }
 
 }

@@ -50,16 +50,20 @@ namespace TTengine.Core
             e.Refresh();
         }
 
-        internal Channel(bool hasRenderBuffer)
+        internal Channel(bool hasRenderBuffer, bool hasScreen)
         {
             this.Children = new List<Channel>();
             this.PostEffects = new List<Effect>();
             this.World = new EntityWorld();
             this.World.InitializeAll(true);
-            this.Screen = new ScreenComp(hasRenderBuffer);
-            var e = this.World.CreateEntity();
-            e.AddComponent(this.Screen);
-            e.Refresh();
+            this.Screen = null;
+            if (hasScreen)
+            {
+                this.Screen = new ScreenComp(hasRenderBuffer);
+                var e = this.World.CreateEntity();
+                e.AddComponent(this.Screen);
+                e.Refresh();
+            }
         }
 
         public void AddChild(Channel ch)
@@ -95,7 +99,7 @@ namespace TTengine.Core
                     c2.IsVisible = false;
                 }
             }
-            this.Screen.IsVisible = false;
+            //this.Screen.IsVisible = false;
         }
 
         /// <summary>
@@ -153,7 +157,12 @@ namespace TTengine.Core
                 c.Draw();
             }
 
-            if (Screen.IsVisible)
+            if (Screen == null)
+            {
+                // a screenless world can still be drawn - to render the audio e.g.
+                this.World.Draw();
+            }
+            else if (Screen.IsVisible)
             {
                 TTGame.Instance.GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
                 TTGame.Instance.GraphicsDevice.Clear(Screen.BackgroundColor);

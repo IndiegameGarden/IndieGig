@@ -34,8 +34,7 @@ namespace Game1
         public Game1Factory Factory;
         public GardenConfig Config;
         public IndieGigCollection Collection;
-        public Channel MainChannel;
-        public Channel WaitChannel;
+        public Channel MainChannel, WaitChannel;
         public Entity MousePointer;
         public Entity SelectedGame;
         public Entity Music;
@@ -82,10 +81,9 @@ namespace Game1
             // game db
             Collection = new IndieGigCollection();
 
-            // game channel
-            MainChannel = TTFactory.CreateChannel(Color.White, false);
+            // main (menu) channel
+            MainChannel = TTFactory.CreateChannel(Color.Black, false);
             ChannelMgr.AddChannel(MainChannel);
-            MainChannel.ZapTo();
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // background
@@ -101,9 +99,19 @@ namespace Game1
 
             // mouse entity            
             MousePointer = Factory.CreateMousePointer();
-            // music
+
+            // wait channel (when playing/launching a game)
+            WaitChannel = TTFactory.CreateChannel(Color.Black, false);
+            ChannelMgr.AddChannel(WaitChannel);
+            TTFactory.BuildTo(WaitChannel);
+            Factory.CreateWaitChannelBackground();
+            MainChannel.ZapTo();
+
+            // music 
+            TTFactory.BuildTo(ChannelMgr.Root);
             Music = Factory.CreateMusic();
 
+            TTFactory.BuildTo(MainChannel);
             base.LoadContent();
         }
 
@@ -116,12 +124,16 @@ namespace Game1
             switch (GlobalState)
             {
                 case GlobalStateEnum.STATE_BROWSING:
+                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
+                    WaitChannel.IsActive = false; WaitChannel.IsVisible = false;
                     GameSelectionProcess();
                     GameLaunchingProcess();
                     BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
+                    MainChannel.IsActive = false; MainChannel.IsVisible = false;
+                    WaitChannel.IsActive = true; WaitChannel.IsVisible = true;
                     GameRunProcess();
                     break;
             }

@@ -241,7 +241,7 @@ namespace TTengine.Core
         /// <returns>Created channel.</returns>
         public static Channel CreateChannel(Color backgroundColor, bool hasRenderBuffer)
         {
-            var ch = new Channel(hasRenderBuffer);
+            var ch = new Channel(hasRenderBuffer, true);
             ch.Screen.BackgroundColor = backgroundColor;
             return ch;
         }
