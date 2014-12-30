@@ -53,8 +53,7 @@ namespace IndiegameGarden.Install
                     // if download ready and OK, start install
                     installTask = new InstallTask(game);
                     installTask.Start();
-                    status = installTask.Status();
-                    statusMsg = installTask.StatusMsg();
+                    this.CopyStatusFrom(installTask);
 
                     // install failed? remove the game dir
                     // FIXME move to a cleanup task
@@ -92,8 +91,7 @@ namespace IndiegameGarden.Install
             {
                 runTask = new GameLauncherTask(game);
                 runTask.Start();
-                status = runTask.Status();
-                statusMsg = runTask.StatusMsg();
+                this.CopyStatusFrom(runTask);
             }
         }
 

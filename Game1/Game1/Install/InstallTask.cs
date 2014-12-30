@@ -42,8 +42,7 @@ namespace IndiegameGarden.Install
                 if (File.Exists(unpacker.Filename))
                 {
                     unpacker.Start();
-                    status = unpacker.Status();
-                    statusMsg = unpacker.StatusMsg();
+                    this.CopyStatusFrom(unpacker);
                 }
                 else
                 {

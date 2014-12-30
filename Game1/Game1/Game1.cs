@@ -184,7 +184,7 @@ namespace Game1
         void GameRunProcess()
         {
             GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
-            GameRunner.StartInstallRunTask(gi);
+            GameRunner.TryRunGame(gi);
             GlobalState = GlobalStateEnum.STATE_BROWSING; // TODO make waiting
         }
     }

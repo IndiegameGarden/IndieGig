@@ -13,7 +13,7 @@ namespace Game1
     {
         public ITask GameRunTask;
 
-        public bool StartInstallRunTask(GardenItem g)
+        public bool TryRunGame(GardenItem g)
         {
             // check if there's already an active task 
             if (GameRunTask != null)
@@ -22,17 +22,49 @@ namespace Game1
                     return false; // stop, only one at a time!
             }
 
+            ITask t = new GameRunnerTask(g);
+            GameRunTask = new ThreadedTask(t);
+            GameRunTask.Start();
+            return true;
+        }
+    }
+
+    public class GameRunnerTask : Task
+    {
+        GardenItem gi;
+        ITask installTask;
+
+        public GameRunnerTask(GardenItem g)
+        {
+            this.gi = g;
+        }
+
+        protected override void StartInternal()
+        {
             // fade out music
             var afc = (Game1.Instance as Game1).Music.GetComponent<AudioFadingComp>();
             afc.FadeTarget = 0;
             afc.FadeSpeed = 0.2;
             afc.IsFading = true;
 
-            var installTask = new GameInstallRunTask(g);
-            GameRunTask = new ThreadedTask(installTask);
-            GameRunTask.Start();
-            return true;
+            // install & run game (via task)
+            installTask = new GameInstallRunTask(gi);
+            installTask.Start();
+
+            // fade in music again
+            afc.FadeTarget = 1;
+            afc.FadeSpeed = 0.2;
+            afc.IsFading = true;
+
+            // status
+            this.CopyStatusFrom(installTask);
         }
 
+        protected override void AbortInternal()
+        {
+            if (installTask != null)
+                installTask.Abort();
+        }
     }
+
 }

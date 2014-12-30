@@ -45,8 +45,7 @@ namespace IndiegameGarden.Install
                 // if download ready and OK, start install
                 installTask = new InstallTask(game);
                 installTask.Start();
-                status = installTask.Status();
-                statusMsg = installTask.StatusMsg();
+                this.CopyStatusFrom(installTask);
 
                 // install failed? remove the game dir
                 // FIXME move to a cleanup task
@@ -76,16 +75,8 @@ namespace IndiegameGarden.Install
             {
                 runTask = new GameLauncherTask(game);
                 runTask.Start();
-
-                status = runTask.Status();
-                statusMsg = runTask.StatusMsg();
+                this.CopyStatusFrom(runTask);
             }
-            // fade in music
-            var afc = (Game1.Game1.Instance as Game1.Game1).Music.GetComponent<AudioFadingComp>();
-            afc.FadeTarget = 1;
-            afc.FadeSpeed = 0.2;
-            afc.IsFading = true;
-
         }
 
         protected override void AbortInternal()

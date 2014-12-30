@@ -88,9 +88,8 @@ namespace IndiegameGarden.Unpack
                         throw new NotImplementedException("unpackertask fileType");
 
                 }
-                unpackTask.Start();                
-                status = unpackTask.Status();
-                statusMsg = unpackTask.StatusMsg();
+                unpackTask.Start();
+                this.CopyStatusFrom(unpackTask);
             }
             catch (Exception ex)
             {

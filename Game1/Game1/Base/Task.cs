@@ -87,5 +87,10 @@ namespace IndiegameGarden.Base
 
         protected abstract void AbortInternal();
 
+        public void CopyStatusFrom(ITask otherTask)
+        {
+            this.status = otherTask.Status();
+            this.statusMsg = otherTask.StatusMsg();
+        }
     }
 }
