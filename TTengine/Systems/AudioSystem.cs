@@ -30,6 +30,8 @@ namespace TTengine.Systems
         public override void Process(Entity entity, AudioComp ac)
         {
             ac.UpdateComp(dt);
+            if (ac.IsPaused)
+                ac.SimTime -= dt; // reverse the time again if paused.
             rp.Time = ac.SimTime;
             rp.Ampl = ac.Ampl;
             audioEngine.Render(ac.AudioScript, rp);

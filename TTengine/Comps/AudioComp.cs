@@ -18,6 +18,9 @@ namespace TTengine.Comps
         /// <summary>The relative amplitude (0...1) to play the script with</summary>
         public double Ampl = 1.0;
 
+        /// <summary>If true, the audio script is paused</summary>
+        public bool IsPaused = false;
+
         public AudioComp()
         {
         }
