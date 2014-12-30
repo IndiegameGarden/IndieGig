@@ -30,10 +30,12 @@ namespace Game1
             STATE_BROWSING,
             STATE_LAUNCHING
         }
+        public static Game1 InstanceGame1;
         public Game1Factory Factory;
         public GardenConfig Config;
         public IndieGigCollection Collection;
-        public Channel GameChannel;
+        public Channel MainChannel;
+        public Channel WaitChannel;
         public Entity MousePointer;
         public Entity SelectedGame;
         public Entity Music;
@@ -46,6 +48,11 @@ namespace Game1
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
                             SCALE_SPEED_TO_UNSELECTED = 0.1;
+
+        public Game1()
+        {
+            InstanceGame1 = this;
+        }
 
         /// <summary>
         /// Init of basics: non-graphical, non-XNA, non-channel related 
@@ -76,9 +83,9 @@ namespace Game1
             Collection = new IndieGigCollection();
 
             // game channel
-            GameChannel = TTFactory.CreateChannel(Color.White, false);
-            ChannelMgr.AddChannel(GameChannel);
-            GameChannel.ZapTo();
+            MainChannel = TTFactory.CreateChannel(Color.White, false);
+            ChannelMgr.AddChannel(MainChannel);
+            MainChannel.ZapTo();
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // background
@@ -90,7 +97,7 @@ namespace Game1
             //
             TTFactory.BuildTo(iconsLayer.GetComponent<ScreenComp>());
             CollectionEntities = Factory.CreateCollection(Collection);
-            TTFactory.BuildTo(GameChannel);
+            TTFactory.BuildTo(MainChannel);
 
             // mouse entity            
             MousePointer = Factory.CreateMousePointer();
@@ -183,9 +190,11 @@ namespace Game1
         /// </summary>
         void GameRunProcess()
         {
-            GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
-            GameRunner.TryRunGame(gi);
-            GlobalState = GlobalStateEnum.STATE_BROWSING; // TODO make waiting
+            if (SelectedGame != null)
+            {
+                GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
+                GameRunner.TryRunGame(gi);
+            }
         }
     }
 

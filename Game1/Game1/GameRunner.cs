@@ -42,7 +42,7 @@ namespace Game1
         protected override void StartInternal()
         {
             // fade out music
-            var afc = (Game1.Instance as Game1).Music.GetComponent<AudioFadingComp>();
+            var afc = Game1.InstanceGame1.Music.GetComponent<AudioFadingComp>();
             afc.FadeTarget = 0;
             afc.FadeSpeed = 0.2;
             afc.IsFading = true;
@@ -58,12 +58,14 @@ namespace Game1
 
             // status
             this.CopyStatusFrom(installTask);
+            Game1.InstanceGame1.GlobalState = Game1.GlobalStateEnum.STATE_BROWSING; 
         }
 
         protected override void AbortInternal()
         {
             if (installTask != null)
                 installTask.Abort();
+            Game1.InstanceGame1.GlobalState = Game1.GlobalStateEnum.STATE_BROWSING; 
         }
     }
 

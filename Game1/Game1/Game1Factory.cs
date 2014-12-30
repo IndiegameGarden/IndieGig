@@ -40,8 +40,8 @@ namespace Game1
             get
             {
                 if (_instance == null)
-                    _instance = new Game1Factory(TTGame.Instance as Game1);
-                return _instance as Game1Factory;
+                    _instance = new Game1Factory(Game1.InstanceGame1);
+                return _instance ;
             }
         }
 
