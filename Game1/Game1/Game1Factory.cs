@@ -182,7 +182,7 @@ namespace Game1
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
             var sc = new ScaleComp();
-            sc.Scale = 12;
+            sc.Scale = 1;
             sprite.AddComponent(sc);
             return sprite;
         }
