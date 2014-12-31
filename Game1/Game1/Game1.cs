@@ -100,13 +100,6 @@ namespace Game1
             // mouse entity            
             MousePointer = Factory.CreateMousePointer();
 
-            // wait channel (when playing/launching a game)
-            WaitChannel = TTFactory.CreateChannel(Color.Black, false);
-            ChannelMgr.AddChannel(WaitChannel);
-            TTFactory.BuildTo(WaitChannel);
-            Factory.CreateWaitChannelBackground();
-            MainChannel.ZapTo();
-
             // music 
             TTFactory.BuildTo(ChannelMgr.Root);
             Music = Factory.CreateMusic();
@@ -124,16 +117,16 @@ namespace Game1
             switch (GlobalState)
             {
                 case GlobalStateEnum.STATE_BROWSING:
-                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
-                    WaitChannel.IsActive = false; WaitChannel.IsVisible = false;
+                    MainChannel.IsActive = true; 
+                    MainChannel.IsVisible = true;
                     GameSelectionProcess();
                     GameLaunchingProcess();
                     BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
-                    MainChannel.IsActive = false; MainChannel.IsVisible = false;
-                    WaitChannel.IsActive = true; WaitChannel.IsVisible = true;
+                    MainChannel.IsActive = false; 
+                    MainChannel.IsVisible = false;
                     GameRunProcess();
                     break;
             }
