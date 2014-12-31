@@ -37,7 +37,7 @@ namespace Game1.Systems
         {
             // set entity to pos
             tmc.Target = calcVector3Pos(xPos,yPos) ;
-            tmc.TargetVelocity = 3000.0;
+            tmc.TargetVelocity = 2500.0;
 
             // next position
             xPos++;
@@ -46,18 +46,6 @@ namespace Game1.Systems
                 xPos = 0;
                 yPos++;
             }
-
-            /*
-            // draw color for fx shader
-            // this is a conversion from 'halotime' to the time format that can be given to the pixel shader
-            // via the 'draw color' parameter
-            Color col = entity.GetComponent<DrawComp>().DrawColor;
-            int t = (int)(haloTime * 256);
-            int c3 = t % 256;
-            int c2 = ((t - c3) / 256) % 256;
-            int c1 = ((t - c2 - c3) / 65536) % 256;
-            entity.GetComponent<DrawComp>().DrawColor = new Color(c1, c2, c3, col.A);
-            */
         }
 
         private Vector3 calcVector3Pos(int x, int y)

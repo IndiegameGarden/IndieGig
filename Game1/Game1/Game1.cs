@@ -38,10 +38,11 @@ namespace Game1
         public Entity MousePointer;
         public Entity SelectedGame;
         public Entity Music;
-        public Entity BackgroundGameIcon;
+        public Entity BackgroundGameIcon, BackgroundRotatingStar;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
+        public bool IsExiting = false;
 
         public const double SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.1,
@@ -60,6 +61,7 @@ namespace Game1
         {
             IsAudio = true;
             IsMouseVisible = true;
+            Window.AllowAltF4 = false;
             GlobalState = GlobalStateEnum.STATE_BROWSING;
             Factory = Game1Factory.Instance;
             Config = GardenConfig.Instance;
@@ -88,31 +90,28 @@ namespace Game1
 
             // background
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
-            Factory.CreateBackgroundRotatingStar();
+            BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
-            //
             TTFactory.BuildTo(iconsLayer.GetComponent<ScreenComp>());
             CollectionEntities = Factory.CreateCollection(Collection);
             TTFactory.BuildTo(MainChannel);
 
-            // mouse entity            
+            // mouse pointer entity            
             MousePointer = Factory.CreateMousePointer();
 
-            // music 
+            // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
             Music = Factory.CreateMusic();
-
             TTFactory.BuildTo(MainChannel);
+
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState kb = Keyboard.GetState();
-            if (kb.IsKeyDown(Keys.Escape))
-                Exit();
+            EscapeKeyProcess();
             
             switch (GlobalState)
             {
@@ -132,6 +131,25 @@ namespace Game1
             }
             
             base.Update(gameTime);
+        }
+
+        void EscapeKeyProcess()
+        {
+            KeyboardState kb = Keyboard.GetState();
+            if (   kb.IsKeyDown(Keys.Escape) || 
+                ( (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) && kb.IsKeyDown(Keys.F4) ) )
+            {
+                var afc = Music.GetComponent<AudioFadingComp>();
+                afc.FadeTarget = 0;
+                afc.FadeSpeed = 1.2;
+                afc.IsFading = true;
+                BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed += 0.03;
+                IsExiting = true;
+            }
+            if (IsExiting && Music.GetComponent<AudioComp>().Ampl == 0)
+            {
+                Exit();
+            }
         }
 
         void GameSelectionProcess()
@@ -161,12 +179,15 @@ namespace Game1
 
         void GameLaunchingProcess()
         {
-            KeyboardState kb = Keyboard.GetState();
-            MouseState ms = Mouse.GetState();
-
-            if (SelectedGame != null && ms.LeftButton == ButtonState.Pressed )
+            if (this.IsActive)
             {
-                GlobalState = GlobalStateEnum.STATE_LAUNCHING;
+                KeyboardState kb = Keyboard.GetState();
+                MouseState ms = Mouse.GetState();
+
+                if (SelectedGame != null && ms.LeftButton == ButtonState.Pressed)
+                {
+                    GlobalState = GlobalStateEnum.STATE_LAUNCHING;
+                }
             }
         }
 

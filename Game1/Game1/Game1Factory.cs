@@ -97,7 +97,8 @@ namespace Game1
         }
 
         /// <summary>
-        /// An entity that tracks the mouse pointer position, to detect collissions
+        /// An entity that tracks the mouse pointer position, to detect collissions with
+        /// selectable icons
         /// </summary>
         public Entity CreateMousePointer()
         {
@@ -154,7 +155,6 @@ namespace Game1
             sc.ScaleTarget = 2;
             sc.ScaleSpeed = 0.1;
             sprite.AddComponent(sc);
-
             return sprite;
         }
 
@@ -172,17 +172,6 @@ namespace Game1
             var sc = new ScaleComp();
             sc.ScaleTarget = 12;
             sc.ScaleSpeed = 0.1;
-            sprite.AddComponent(sc);
-            return sprite;
-        }
-
-        public Entity CreateWaitChannelBackground()
-        {
-            var sprite = TTFactory.CreateSpritelet("supernova");
-            sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
-            sprite.GetComponent<SpriteComp>().CenterToMiddle();
-            var sc = new ScaleComp();
-            sc.Scale = 1;
             sprite.AddComponent(sc);
             return sprite;
         }

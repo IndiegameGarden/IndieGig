@@ -44,7 +44,7 @@ namespace Game1
             // fade out music
             var afc = Game1.InstanceGame1.Music.GetComponent<AudioFadingComp>();
             afc.FadeTarget = 0;
-            afc.FadeSpeed = 0.2;
+            afc.FadeSpeed = 0.4;
             afc.IsFading = true;
 
             // install & run game (via task)
