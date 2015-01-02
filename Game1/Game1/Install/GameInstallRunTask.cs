@@ -21,6 +21,8 @@ namespace IndiegameGarden.Install
     /// </summary>
     public class GameInstallRunTask: Task
     {
+        public bool DoRun = true;
+
         InstallTask installTask;
         GameLauncherTask runTask;
         GardenItem game;
@@ -71,7 +73,7 @@ namespace IndiegameGarden.Install
             }
 
             // ready to run
-            if (status != ITaskStatus.FAIL)
+            if (DoRun && status != ITaskStatus.FAIL)
             {
                 runTask = new GameLauncherTask(game);
                 runTask.Start();

@@ -28,7 +28,8 @@ namespace Game1
         public enum GlobalStateEnum
         {
             STATE_BROWSING,
-            STATE_LAUNCHING
+            STATE_LAUNCHING,
+            STATE_PLAYING
         }
         public static Game1 InstanceGame1;
         public Game1Factory Factory;
@@ -116,17 +117,20 @@ namespace Game1
             switch (GlobalState)
             {
                 case GlobalStateEnum.STATE_BROWSING:
-                    MainChannel.IsActive = true; 
-                    MainChannel.IsVisible = true;
+                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameSelectionProcess();
                     GameLaunchingProcess();
                     BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
-                    MainChannel.IsActive = false; 
-                    MainChannel.IsVisible = false;
+                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess();
+                    BackgroundGameIconNewTextureProcess();
+                    break;
+
+                case GlobalStateEnum.STATE_PLAYING:
+                    MainChannel.IsActive = false; MainChannel.IsVisible = false;
                     break;
             }
             

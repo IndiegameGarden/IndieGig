@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using TTengine.Comps;
 using IndiegameGarden.Base;
@@ -32,7 +33,7 @@ namespace Game1
     public class GameRunnerTask : Task
     {
         GardenItem gi;
-        ITask installTask;
+        GameInstallRunTask installTask;
 
         public GameRunnerTask(GardenItem g)
         {
@@ -41,14 +42,24 @@ namespace Game1
 
         protected override void StartInternal()
         {
+            // install game (via task)
+            installTask = new GameInstallRunTask(gi);
+            installTask.DoRun = false;
+            installTask.Start();
+
             // fade out music
             var afc = Game1.InstanceGame1.Music.GetComponent<AudioFadingComp>();
             afc.FadeTarget = 0;
             afc.FadeSpeed = 0.4;
             afc.IsFading = true;
 
-            // install & run game (via task)
+            // delayed state change
+            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(4000, Game1.GlobalStateEnum.STATE_PLAYING));
+            stateChangeTask.Start();
+
+            // run game
             installTask = new GameInstallRunTask(gi);
+            installTask.DoRun = true;
             installTask.Start();
 
             // fade in music again
@@ -69,4 +80,26 @@ namespace Game1
         }
     }
 
+    public class DelayedStateChanger: Task
+    {
+        Game1.GlobalStateEnum state;
+        int delayMs;
+
+        public DelayedStateChanger(int delayMs, Game1.GlobalStateEnum state)
+        {
+            this.delayMs = delayMs;
+            this.state = state;
+        }
+
+        protected override void StartInternal()
+        {
+            Thread.Sleep(delayMs);
+            Game1.InstanceGame1.GlobalState = state;
+        }
+
+        protected override void AbortInternal()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
