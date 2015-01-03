@@ -160,16 +160,28 @@ namespace TTengine.Core
         }
 
         /// <summary>
-        /// Creates a Textlet, which is a moveable piece of text. (TODO: font)
+        /// Creates a Textlet, which is a moveable piece of text.
+        /// Uses a default font.
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
         public static Entity CreateTextlet(string text)
         {
+            return CreateTextlet(text, "TTDebugFont");
+        }
+
+        /// <summary>
+        /// Creates a Textlet, which is a moveable piece of text.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="fontName"></param>
+        /// <returns></returns>
+        public static Entity CreateTextlet(string text, string fontName)
+        {
             Entity e = CreateDrawlet();
             e.AddComponent(new ScaleComp());
             TextComp tc = new TextComp(text);
-            tc.Font = _game.Content.Load<SpriteFont>("TTDebugFont"); // FIXME allow other fonts
+            tc.Font = _game.Content.Load<SpriteFont>(fontName); // FIXME allow other fonts
             e.AddComponent(tc);
             e.Refresh();
             return e;

@@ -98,10 +98,6 @@ namespace Game1
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
             BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
 
-            // text
-            var t = TTFactory.CreateTextlet("IndieGig");
-            t.GetComponent<PositionComp>().Position2D = new Vector2(80f, 20f);
-
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
             TTFactory.BuildTo(iconsLayer.GetComponent<ScreenComp>());
@@ -110,6 +106,10 @@ namespace Game1
 
             // mouse pointer entity            
             MousePointer = Factory.CreateMousePointer();
+
+            // text
+            var t = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
+            t.GetComponent<PositionComp>().Position2D = new Vector2(80f, 20f);
 
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);

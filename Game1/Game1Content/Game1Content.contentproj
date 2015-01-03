@@ -90,6 +90,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="m41_lovebit.spritefont">
+      <Name>m41_lovebit</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
     <None Include="MonoGame-Effect-build.bat">
       <Name>MonoGame-Effect-build</Name>
     </None>
