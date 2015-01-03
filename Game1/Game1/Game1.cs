@@ -49,7 +49,11 @@ namespace Game1
         public const double SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
-                            SCALE_SPEED_TO_UNSELECTED = 0.1;
+                            SCALE_SPEED_TO_UNSELECTED = 0.1,
+                            BACKGROUND_STAR_ROTATION_SPEED = 0.05,
+                            BACKGROUND_ICON_ROTATION_SPEED = 0.04,
+                            BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
+                            BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01;
 
         public Game1()
         {
@@ -117,7 +121,8 @@ namespace Game1
 
         protected override void Update(GameTime gameTime)
         {
-            EscapeKeyProcess();
+            double dt = gameTime.ElapsedGameTime.TotalSeconds;
+            EscapeKeyProcess(dt);
             
             switch (GlobalState)
             {
@@ -126,12 +131,14 @@ namespace Game1
                     GameSelectionProcess();
                     GameLaunchingProcess();
                     BackgroundGameIconNewTextureProcess();
+                    BackgroundSpeedupRotationProcess(dt);
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess();
                     BackgroundGameIconNewTextureProcess();
+                    BackgroundSlowdownRotationProcess(gameTime.ElapsedGameTime.TotalSeconds);
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING:
@@ -142,7 +149,7 @@ namespace Game1
             base.Update(gameTime);
         }
 
-        void EscapeKeyProcess()
+        void EscapeKeyProcess(double dt)
         {
             KeyboardState kb = Keyboard.GetState();
             if (   kb.IsKeyDown(Keys.Escape) || 
@@ -150,14 +157,16 @@ namespace Game1
             {
                 var afc = Music.GetComponent<AudioFadingComp>();
                 afc.FadeTarget = 0;
-                afc.FadeSpeed = 1.2;
+                afc.FadeSpeed = 0.9;
                 afc.IsFading = true;
-                BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed += 0.03;
                 IsExiting = true;
             }
-            if (IsExiting && Music.GetComponent<AudioComp>().Ampl == 0)
+            if (IsExiting) 
             {
-                Exit();
+                BackgroundSlowdownRotationProcess(dt);
+                BackgroundSlowdownRotationProcess(dt);
+                if (Music.GetComponent<AudioComp>().Ampl == 0)
+                    Exit();
             }
         }
 
@@ -246,6 +255,37 @@ namespace Game1
                 GameRunner.TryRunGame(gi);
             }
         }
+
+        void BackgroundSlowdownRotationProcess(double dt)
+        {
+            var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
+            var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
+            double dr = -BACKGROUND_ROTATION_SLOWDOWN_SPEED * dt;
+            if (rc1.RotateSpeed > 0)
+                rc1.RotateSpeed += dr;
+            if (rc2.RotateSpeed > 0)
+                rc2.RotateSpeed += dr;
+            if (rc1.RotateSpeed < 0)
+                rc1.RotateSpeed = 0;
+            if (rc2.RotateSpeed < 0)
+                rc2.RotateSpeed = 0;
+        }
+
+        void BackgroundSpeedupRotationProcess(double dt)
+        {
+            var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
+            var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
+            double dr = BACKGROUND_ROTATION_SPEEDUP_SPEED * dt;
+            if (rc1.RotateSpeed < BACKGROUND_ICON_ROTATION_SPEED)
+                rc1.RotateSpeed += dr;
+            if (rc2.RotateSpeed < BACKGROUND_STAR_ROTATION_SPEED)
+                rc2.RotateSpeed += dr;
+            if (rc1.RotateSpeed > BACKGROUND_ICON_ROTATION_SPEED)
+                rc1.RotateSpeed = BACKGROUND_ICON_ROTATION_SPEED;
+            if (rc2.RotateSpeed > BACKGROUND_STAR_ROTATION_SPEED)
+                rc2.RotateSpeed = BACKGROUND_STAR_ROTATION_SPEED;
+        }
+
     }
 
 }

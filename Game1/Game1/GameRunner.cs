@@ -54,7 +54,8 @@ namespace Game1
             afc.IsFading = true;
 
             // delayed state change
-            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(4000, Game1.GlobalStateEnum.STATE_PLAYING));
+            int dlyMs = (int) ( 1000 * Game1.BACKGROUND_STAR_ROTATION_SPEED / Game1.BACKGROUND_ROTATION_SLOWDOWN_SPEED ) + 100;
+            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(dlyMs, Game1.GlobalStateEnum.STATE_PLAYING));
             stateChangeTask.Start();
 
             // run game

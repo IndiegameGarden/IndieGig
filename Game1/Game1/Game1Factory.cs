@@ -149,7 +149,7 @@ namespace Game1
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
             var rc = new RotateComp();
-            rc.RotateSpeed = 0.05;
+            rc.RotateSpeed = 0;
             sprite.AddComponent(rc);
             var sc = new ScaleComp();
             sc.ScaleTarget = 2;
@@ -167,7 +167,7 @@ namespace Game1
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
             var rc = new RotateComp();
-            rc.RotateSpeed = 0.04;
+            rc.RotateSpeed = 0;
             sprite.AddComponent(rc);
             var sc = new ScaleComp();
             sc.ScaleTarget = 12;
