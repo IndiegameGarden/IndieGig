@@ -51,7 +51,8 @@ namespace Game1
                     IsReadyForKeypress = true;
 
         // UI constants
-        public const double SCALE_SELECTED = 1.2,
+        public const double ICON_SIZE = 128, // pixels
+                            SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
                             SCALE_SPEED_TO_UNSELECTED = 0.1,
@@ -287,8 +288,20 @@ namespace Game1
             {
                 var sc_dest = BackgroundGameIcon.GetComponent<SpriteComp>();
                 var sc_src = SelectedGame.GetComponent<SpriteComp>();
-                const float LERP_FACTOR = 0.9f;
+                const float LERP_FACTOR = 0.97f;
 
+                Vector2 dir = RandomMath.RandomDirection();
+
+                const float DSTEP = (1f / (float)ICON_SIZE);
+                for (float d = -0.5f; d <= 0.5f; d += DSTEP)
+                {
+                    int x = (int)(sc_dest.Width * (d * dir.X + 0.5f));
+                    int y = (int)(sc_dest.Height * (d * dir.Y + 0.5f));
+                    Color px = sc_src.GetPixel(x, y);
+                    Color px2 = sc_dest.GetPixel(x, y);
+                    sc_dest.SetPixel(x, y, Color.Lerp(px, px2, LERP_FACTOR));
+                }
+                /*
                 if (RandomMath.RandomUnit() < 0.5)
                 {
                     int x = RandomMath.RandomIntBetween(0, sc_dest.Width);
@@ -309,7 +322,7 @@ namespace Game1
                         sc_dest.SetPixel(x, y, Color.Lerp(px, px2, LERP_FACTOR));
                     }
                 }
-
+                */
             }
         }
 
