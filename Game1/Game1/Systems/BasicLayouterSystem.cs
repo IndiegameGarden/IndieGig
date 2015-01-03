@@ -22,7 +22,7 @@ namespace Game1.Systems
         public static float Dx = 128f;
         public static float Dy = 128f;
 
-        protected int xPos, yPos, xPosMax = 6;
+        protected int xPos, yPos, xPosMax = Game1.ICONCOUNT_HORIZONTAL;
         protected float haloTime = 0f;
 
         protected override void Begin()

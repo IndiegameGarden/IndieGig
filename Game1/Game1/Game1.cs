@@ -37,13 +37,18 @@ namespace Game1
         public IndieGigCollection Collection;
         public Channel MainChannel, WaitChannel;
         public Entity MousePointer;
-        public Entity SelectedGame;
+        public Entity SelectedGame, KeyboardSelectedGame;
         public Entity Music;
         public Entity BackgroundGameIcon, BackgroundRotatingStar;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
-        public bool IsExiting = false;
+        public int  KeyboardSelectedGameIndex = 0;
+        public Vector2 LastMousePos;
+        public bool IsExiting = false,
+                    CanExit = false,
+                    IsMouseForSelection = true,
+                    IsReadyForKeypress = true;
 
         // UI constants
         public const double SCALE_SELECTED = 1.2,
@@ -54,6 +59,7 @@ namespace Game1
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
                             BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
                             BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01;
+        public const int    ICONCOUNT_HORIZONTAL = 6;
 
         public Game1()
         {
@@ -151,15 +157,20 @@ namespace Game1
 
         void EscapeKeyProcess(double dt)
         {
-            KeyboardState kb = Keyboard.GetState();
-            if (   kb.IsKeyDown(Keys.Escape) || 
-                ( (kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) && kb.IsKeyDown(Keys.F4) ) )
+            CanExit = (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed > 0.02) ;
+
+            if (CanExit)
             {
-                var afc = Music.GetComponent<AudioFadingComp>();
-                afc.FadeTarget = 0;
-                afc.FadeSpeed = 0.9;
-                afc.IsFading = true;
-                IsExiting = true;
+                KeyboardState kb = Keyboard.GetState();
+                if (kb.IsKeyDown(Keys.Escape) ||
+                    ((kb.IsKeyDown(Keys.LeftAlt) || kb.IsKeyDown(Keys.RightAlt)) && kb.IsKeyDown(Keys.F4)))
+                {
+                    var afc = Music.GetComponent<AudioFadingComp>();
+                    afc.FadeTarget = 0;
+                    afc.FadeSpeed = 0.9;
+                    afc.IsFading = true;
+                    IsExiting = true;
+                }
             }
             if (IsExiting) 
             {
@@ -172,7 +183,60 @@ namespace Game1
 
         void GameSelectionProcess()
         {
-            var coll = MousePointer.GetComponent<SpriteComp>().Colliders;
+            // keyb input
+            KeyboardState kb = Keyboard.GetState();
+            int d = 0;
+            if (IsReadyForKeypress)
+            {
+                if (kb.IsKeyDown(Keys.Right))   d = +1;
+                if (kb.IsKeyDown(Keys.Left))    d = -1;
+                if (kb.IsKeyDown(Keys.Up))      d = -ICONCOUNT_HORIZONTAL;
+                if (kb.IsKeyDown(Keys.Down))    d = +ICONCOUNT_HORIZONTAL;
+                if (kb.IsKeyDown(Keys.Enter))
+                {
+                    if (IsMouseForSelection)
+                    {
+                        IsMouseForSelection = false;
+                        IsReadyForKeypress = false;
+                    }
+                    else
+                        GlobalState = GlobalStateEnum.STATE_LAUNCHING;
+                }
+                if (d != 0)
+                {
+                    IsReadyForKeypress = false;
+                    if ((d + KeyboardSelectedGameIndex) >= 0 && (d + KeyboardSelectedGameIndex) < Collection.Count)
+                    {
+                        KeyboardSelectedGameIndex += d;
+                        KeyboardSelectedGame = CollectionEntities[KeyboardSelectedGameIndex];
+                        IsMouseForSelection = false;
+                    }
+                }
+            }
+            if (kb.GetPressedKeys().Length == 0)
+                IsReadyForKeypress = true;
+
+            // mouse input
+            Vector2 pos = MousePointer.GetComponent<PositionComp>().Position2D;
+            if (!pos.Equals(LastMousePos))
+            {
+                IsMouseForSelection = true;
+            }
+            LastMousePos = pos;
+
+            // use input
+            List<Entity> coll ;
+            if (IsMouseForSelection)
+            {
+                coll = MousePointer.GetComponent<SpriteComp>().Colliders;
+                IsMouseVisible = true;
+            }
+            else
+            {
+                IsMouseVisible = false;
+                coll = new List<Entity>();
+                coll.Add(KeyboardSelectedGame);
+            }
             SelectedGame = null;
             foreach (Entity e in CollectionEntities)
             {
@@ -183,6 +247,11 @@ namespace Game1
                     sc.ScaleSpeed = SCALE_SPEED_TO_SELECTED;
                     SelectedGame = e;
                     BackgroundGameIcon.GetComponent<SpriteComp>().CenterToMiddle();
+                    if (IsMouseForSelection)
+                    {
+                        KeyboardSelectedGame = SelectedGame;
+                        KeyboardSelectedGameIndex = CollectionEntities.IndexOf(KeyboardSelectedGame);
+                    }
                 }
                 else
                 {
