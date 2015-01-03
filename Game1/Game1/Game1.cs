@@ -45,6 +45,7 @@ namespace Game1
         public GameRunner GameRunner;
         public bool IsExiting = false;
 
+        // UI constants
         public const double SCALE_SELECTED = 1.2,
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
@@ -92,6 +93,10 @@ namespace Game1
             // background
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
             BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
+
+            // text
+            var t = TTFactory.CreateTextlet("IndieGig");
+            t.GetComponent<PositionComp>().Position2D = new Vector2(80f, 20f);
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
