@@ -64,25 +64,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TTDebugFont.spritefont">
-      <Name>TTDebugFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-    <Compile Include="TTFrameRateCounter.spritefont">
-      <Name>TTFrameRateCounter</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="bentologo.png">
-      <Name>bentologo</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="pixie.png">
       <Name>pixie</Name>
       <Importer>TextureImporter</Importer>
@@ -97,10 +78,6 @@
     </Compile>
     <None Include="MonoGame-Effect-build.bat">
       <Name>MonoGame-Effect-build</Name>
-    </None>
-    <None Include="music.ogg">
-      <Name>music</Name>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -146,18 +123,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ball-supernova2.png">
-      <Name>ball-supernova2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="supernova.png">
+    <None Include="supernova.png">
       <Name>supernova</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Compile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="supernova128.png">

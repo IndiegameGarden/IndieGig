@@ -144,7 +144,7 @@ namespace Game1
         public Entity CreateBackgroundRotatingStar()
         {
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
-            var sprite = TTFactory.CreateSpritelet("supernova");
+            var sprite = TTFactory.CreateSpritelet("supernova.png");
             sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
