@@ -36,7 +36,7 @@ namespace Game1.Systems
         public override void Process(Entity entity, GardenItemComp gc, TargetMotionComp tmc)
         {
             // set entity to pos
-            tmc.Target = calcVector3Pos(xPos,yPos) ;
+            tmc.Target = calcVectorPos(xPos,yPos) ;
             tmc.TargetVelocity = 2500.0;
 
             // next position
@@ -48,9 +48,9 @@ namespace Game1.Systems
             }
         }
 
-        private Vector3 calcVector3Pos(int x, int y)
+        private Vector2 calcVectorPos(int x, int y)
         {
-            return new Vector3(x * Dx, y * Dy, 0f);
+            return new Vector2(x * Dx, y * Dy);
         }
     }
 }

@@ -68,9 +68,8 @@ namespace TTengine.Systems
             posComp.IsPositionAbsCalculated = false;
             posComp.X += (float)(veloComp.X * dt);
             posComp.Y += (float)(veloComp.Y * dt);
-            posComp.Z += (float)(veloComp.Z * dt);
 
-            posComp.PositionModifier = Vector3.Zero;
+            posComp.PositionModifier = Vector2.Zero;
         }
     }
 
@@ -95,7 +94,7 @@ namespace TTengine.Systems
                 posComp._positionAbs = posComp.Position + posComp.PositionModifier 
                                         + (posComp.Parent as PositionComp).PositionAbs;
             posComp.IsPositionAbsCalculated = true;
-            posComp.PositionModifier = Vector3.Zero;
+            posComp.PositionModifier = Vector2.Zero;
         }
     }
 

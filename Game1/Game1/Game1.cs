@@ -116,7 +116,7 @@ namespace Game1
 
             // text
             var t = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
-            t.GetComponent<PositionComp>().Position2D = new Vector2(80f, 20f);
+            t.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
 
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
@@ -218,7 +218,7 @@ namespace Game1
                 IsReadyForKeypress = true;
 
             // mouse input
-            Vector2 pos = MousePointer.GetComponent<PositionComp>().Position2D;
+            var pos = MousePointer.GetComponent<PositionComp>().Position;
             if (!pos.Equals(LastMousePos))
             {
                 IsMouseForSelection = true;

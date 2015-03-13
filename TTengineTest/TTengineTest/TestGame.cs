@@ -67,8 +67,9 @@ namespace TTengineTest
 
         protected override void Initialize()
         {
-            Factory = TestFactory.Instance;
             base.Initialize();
+
+            Factory = TestFactory.Instance;
         }
 
         protected override void Update(GameTime gameTime)
