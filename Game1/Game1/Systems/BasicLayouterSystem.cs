@@ -43,7 +43,7 @@ namespace Game1.Systems
             xPos++;
             if (xPos > xPosMax)
             {
-                xPos = 0;
+                xPos = 1;
                 yPos++;
             }
         }

@@ -45,6 +45,62 @@ namespace Game1
             g = CreateItem("Arvoesine");
             g.Name = "Arvoesine";
             g.ExeFile = "Arvoesine.exe";
+
+            g = CreateItem("In60Seconds");
+            g.Name = "In 60 Seconds";
+            g.ExeFile = "I60Sf.exe";
+
+            g = CreateItem("supercratebox");
+            g.Name = "Super Crate Box";
+            g.ExeFile = "supercratebox.exe";
+
+            g = CreateItem("maru");
+            g.Name = "Maru";
+            g.ExeFile = "Maru.exe";
+
+            g = CreateItem("YETI-HUNTER");
+            g.Name = "Yeti Hunter";
+            g.ExeFile = "YETI HUNTER.exe";
+
+            g = CreateItem("Beacon");
+            g.Name = "Beacon";
+            g.ExeFile = "Beacon.exe";
+
+            g = CreateItem("blackfoot");
+            g.Name = "Blackfoot";
+            g.ExeFile = "Blackfoot-v2.exe";
+
+            g = CreateItem("MythicDefence");
+            g.Name = "Mythic Defence";
+            g.ExeFile = "Mythic Defence - The rise of evil.exe";
+
+            g = CreateItem("Wither");
+            g.Name = "Wither";
+            g.ExeFile = "RPG_RT.exe";
+
+            g = CreateItem("MagicOwl");
+            g.Name = "Magic Owl";
+            g.ExeFile = "owl.exe";
+
+            g = CreateItem("artibeus");
+            g.Name = "Artibeus";
+            g.ExeFile = "artibeus.exe";
+
+            g = CreateItem("MadeOfMirrors");
+            g.Name = "Made Of Mirrors";
+            g.ExeFile = "Made of Mirrors v1.03.exe";
+
+            g = CreateItem("charge");
+            g.Name = "Charge";
+            g.ExeFile = "charge.exe";
+
+            g = CreateItem("HighRiseRunners");
+            g.Name = "High-Rise Runners";
+            g.ExeFile = "High-Rise Runners.exe";
+
+            g = CreateItem("spaceWorms");
+            g.Name = "Space Worms";
+            g.ExeFile = "spaceWorms.exe";
         }
 
         private GardenItem CreateItem(string id)

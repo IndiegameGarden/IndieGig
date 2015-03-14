@@ -60,7 +60,7 @@ namespace Game1
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
                             BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
                             BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01;
-        public const int    ICONCOUNT_HORIZONTAL = 6;
+        public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
 
         public Game1()
         {
