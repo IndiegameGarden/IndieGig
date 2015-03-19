@@ -57,6 +57,11 @@ namespace IndiegameGarden.Base
         public string ExeFile = "";
 
         /// <summary>
+        /// name of .exe file to configure the game
+        /// </summary>
+        public string ExeConfig = "";
+
+        /// <summary>
         /// directory gameDirPath that OS has to 'change directory' to, before launching the game
         /// </summary>
         public string CdPath = "";

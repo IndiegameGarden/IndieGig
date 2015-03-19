@@ -33,6 +33,7 @@ namespace Game1
             g = CreateItem("spelunky");
             g.Name = "Spelunky";
             g.ExeFile = "Spelunky.exe";
+            g.ExeConfig = "config.exe";
 
             g = CreateItem("RussianSubwayDogs");
             g.Name = "Russian Subway Dogs";
@@ -45,6 +46,7 @@ namespace Game1
             g = CreateItem("Arvoesine");
             g.Name = "Arvoesine";
             g.ExeFile = "Arvoesine.exe";
+            g.ExeConfig = "config.exe";
 
             g = CreateItem("In60Seconds");
             g.Name = "In 60 Seconds";
@@ -81,6 +83,7 @@ namespace Game1
             g = CreateItem("MagicOwl");
             g.Name = "Magic Owl";
             g.ExeFile = "owl.exe";
+            g.ExeConfig = "winsetup.exe";
 
             g = CreateItem("artibeus");
             g.Name = "Artibeus";
@@ -101,6 +104,20 @@ namespace Game1
             g = CreateItem("spaceWorms");
             g.Name = "Space Worms";
             g.ExeFile = "spaceWorms.exe";
+
+            g = CreateItem("TheBeatTheStepAndTheCowboys");
+            g.Name = "The Beat The Step and The Cowboys";
+            g.ExeFile = "TheBeatTheStepAndTheCowboys.exe";
+
+            g = CreateItem("Code7");
+            g.Name = "Code 7 (prolog)";
+            g.ExeFile = "code7.exe";
+
+            g = CreateItem("IAmJason");
+            g.Name = "IAMJASON";
+            g.ExeFile = "IAMJASON.exe";
+            g.ExeConfig = "winsetup.exe";
+
         }
 
         private GardenItem CreateItem(string id)
