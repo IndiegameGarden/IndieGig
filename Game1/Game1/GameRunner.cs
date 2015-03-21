@@ -55,7 +55,7 @@ namespace Game1
 
             // delayed state change
             int dlyMs = (int) ( 1000 * Game1.BACKGROUND_STAR_ROTATION_SPEED / Game1.BACKGROUND_ROTATION_SLOWDOWN_SPEED ) + 100;
-            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(dlyMs, Game1.GlobalStateEnum.STATE_PLAYING));
+            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(dlyMs, Game1.GlobalStateEnum.STATE_PLAYING_PHASE1));
             stateChangeTask.Start();
 
             // run game

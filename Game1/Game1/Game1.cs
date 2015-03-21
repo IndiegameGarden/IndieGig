@@ -29,7 +29,8 @@ namespace Game1
         {
             STATE_BROWSING,
             STATE_LAUNCHING,
-            STATE_PLAYING
+            STATE_PLAYING_PHASE1,
+            STATE_PLAYING_PHASE2
         }
         public static Game1 InstanceGame1;
         public Game1Factory Factory;
@@ -40,6 +41,7 @@ namespace Game1
         public Entity SelectedGame, KeyboardSelectedGame;
         public Entity Music;
         public Entity BackgroundGameIcon, BackgroundRotatingStar;
+        public Entity TopLineText;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
@@ -56,10 +58,16 @@ namespace Game1
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
                             SCALE_SPEED_TO_UNSELECTED = 0.1,
+                            SCALE_ICON_TO_BACKGROUND = 0.9,
+                            SCALE_ICON_TO_FOREGROUND = 1.4,
+                            SCALE_ICON_TO_FOREGROUND_SPEED = 0.0025,
+                            SCALE_ICON_TO_BACKGROUND_SPEED = 0.0025,                            
                             BACKGROUND_STAR_ROTATION_SPEED = 0.05,
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
                             BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
-                            BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01;
+                            BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01,
+                            MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
+        public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_ICON_TO_FOREGROUND);
         public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
 
         public Game1()
@@ -115,8 +123,8 @@ namespace Game1
             MousePointer = Factory.CreateMousePointer();
 
             // text
-            var t = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
-            t.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
+            TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
+            TopLineText.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
 
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
@@ -135,6 +143,7 @@ namespace Game1
             {
                 case GlobalStateEnum.STATE_BROWSING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
+                    TopLineText.GetComponent<TextComp>().Text = IsExiting ? "Goodbye" : "IndieGig";
                     GameSelectionProcess();
                     GameLaunchingProcess();
                     BackgroundGameIconNewTextureProcess();
@@ -143,12 +152,20 @@ namespace Game1
 
                 case GlobalStateEnum.STATE_LAUNCHING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
+                    TopLineText.GetComponent<TextComp>().Text = "Launching";
                     GameRunProcess();
+                    IconsShrinkingProcess();
                     BackgroundGameIconNewTextureProcess();
-                    BackgroundSlowdownRotationProcess(gameTime.ElapsedGameTime.TotalSeconds);
+                    BackgroundSpeedupRotationProcess(dt,5.0);
                     break;
 
-                case GlobalStateEnum.STATE_PLAYING:
+                case GlobalStateEnum.STATE_PLAYING_PHASE1:
+                    TopLineText.GetComponent<TextComp>().Text = "Playing";
+                    BackgroundSlowdownRotationProcess(dt, 3.0);
+                    StatePlayingPhase1Process();
+                    break;
+                
+                case GlobalStateEnum.STATE_PLAYING_PHASE2:
                     MainChannel.IsActive = false; MainChannel.IsVisible = false;
                     break;
             }
@@ -168,16 +185,16 @@ namespace Game1
                 {
                     var afc = Music.GetComponent<AudioFadingComp>();
                     afc.FadeTarget = 0;
-                    afc.FadeSpeed = 0.9;
+                    afc.FadeSpeed = MUSIC_FADEOUT_ON_EXIT_SPEED;
                     afc.IsFading = true;
                     IsExiting = true;
                 }
             }
             if (IsExiting) 
             {
-                BackgroundSlowdownRotationProcess(dt);
-                BackgroundSlowdownRotationProcess(dt);
-                if (Music.GetComponent<AudioComp>().Ampl == 0)
+                BackgroundSlowdownRotationProcess(dt,2.0);
+                if (Music.GetComponent<AudioComp>().Ampl == 0 &&
+                    BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0)
                     Exit();
             }
         }
@@ -260,14 +277,15 @@ namespace Game1
                     sc.ScaleSpeed = SCALE_SPEED_TO_UNSELECTED;
                 }
 
+                // biggest thing shows on top
                 var dc = e.GetComponent<DrawComp>();
-                dc.LayerDepth = (float) ((SCALE_SELECTED-sc.Scale)/SCALE_SELECTED);
+                dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
             }
         }
 
         void GameLaunchingProcess()
         {
-            if (this.IsActive)
+            if (this.IsActive && !this.IsExiting)
             {
                 KeyboardState kb = Keyboard.GetState();
                 MouseState ms = Mouse.GetState();
@@ -338,11 +356,11 @@ namespace Game1
             }
         }
 
-        void BackgroundSlowdownRotationProcess(double dt)
+        void BackgroundSlowdownRotationProcess(double dt, double multiplier = 1.0 )
         {
             var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
             var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
-            double dr = -BACKGROUND_ROTATION_SLOWDOWN_SPEED * dt;
+            double dr = -BACKGROUND_ROTATION_SLOWDOWN_SPEED * multiplier * dt;
             if (rc1.RotateSpeed > 0)
                 rc1.RotateSpeed += dr;
             if (rc2.RotateSpeed > 0)
@@ -353,19 +371,52 @@ namespace Game1
                 rc2.RotateSpeed = 0;
         }
 
-        void BackgroundSpeedupRotationProcess(double dt)
+        void BackgroundSpeedupRotationProcess(double dt, double multiplier = 1.0)
         {
             var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
             var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
-            double dr = BACKGROUND_ROTATION_SPEEDUP_SPEED * dt;
-            if (rc1.RotateSpeed < BACKGROUND_ICON_ROTATION_SPEED)
+            double dr = multiplier * BACKGROUND_ROTATION_SPEEDUP_SPEED * dt;
+            var spd1 = multiplier * BACKGROUND_ICON_ROTATION_SPEED;
+            var spd2 = multiplier * BACKGROUND_STAR_ROTATION_SPEED;
+            if (rc1.RotateSpeed < spd1)
                 rc1.RotateSpeed += dr;
-            if (rc2.RotateSpeed < BACKGROUND_STAR_ROTATION_SPEED)
+            if (rc2.RotateSpeed < spd2)
                 rc2.RotateSpeed += dr;
-            if (rc1.RotateSpeed > BACKGROUND_ICON_ROTATION_SPEED)
-                rc1.RotateSpeed = BACKGROUND_ICON_ROTATION_SPEED;
-            if (rc2.RotateSpeed > BACKGROUND_STAR_ROTATION_SPEED)
-                rc2.RotateSpeed = BACKGROUND_STAR_ROTATION_SPEED;
+            if (rc1.RotateSpeed > spd1)
+                rc1.RotateSpeed = spd1;
+            if (rc2.RotateSpeed > spd2)
+                rc2.RotateSpeed = spd2;
+        }
+
+        void StatePlayingPhase1Process()
+        {
+            // when rotation has stopped - move to next phase (still screen)
+            if (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0)
+            {
+                this.GlobalState = GlobalStateEnum.STATE_PLAYING_PHASE2;
+            }
+        }
+
+        void IconsShrinkingProcess()
+        {
+            
+            foreach (Entity e in CollectionEntities)
+            {
+                var sc = e.GetComponent<ScaleComp>();
+                if (SelectedGame != e)
+                {
+                    sc.ScaleTarget = SCALE_ICON_TO_BACKGROUND;
+                    sc.ScaleSpeed = SCALE_ICON_TO_BACKGROUND_SPEED;
+                }
+                else
+                {
+                    sc.ScaleTarget = SCALE_ICON_TO_FOREGROUND;
+                    sc.ScaleSpeed = SCALE_ICON_TO_FOREGROUND_SPEED;
+                }
+                var dc = e.GetComponent<DrawComp>();
+                dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
+            }
+             
         }
 
     }
