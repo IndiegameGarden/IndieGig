@@ -1,6 +1,8 @@
 TODO
 - music to restart when it is done and a game has been quit
-- speed up rotation when installing/unpacking zip
 - icons move a bit in the wind
-- icons move backward while running a new game; come forward again when done playing
 - config.exe called when pressing C
+
+DONE
+- speed up rotation when installing/unpacking zip
+- icons move backward while running a new game; come forward again when done playing

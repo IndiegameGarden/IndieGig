@@ -44,7 +44,10 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	//res = tex2D(TextureSampler, (vDif/Scale+Center) ) ;		  
 	res  = tex2D(TextureSampler, (vDifNorm*lWarped/Scale+Center) ) ;		  
 	float bri = (res.r + res.g + res.b) / 3.0 ;
-	float alpha = res.a;
+	
+	//float alpha = res.a * (lWarped);
+	//if (alpha < 0) alpha = 0;
+	//if (alpha > 1) alpha = 1;
 
 	//res *= bri;
 	//res.a *= (1-bri);

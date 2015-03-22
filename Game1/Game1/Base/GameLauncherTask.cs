@@ -103,6 +103,7 @@ namespace IndiegameGarden.Base
                 while (!IsFinished())
                 {
                     Thread.Sleep(200);
+                    // FIXME also exit loop is no more active game window (handle 0)
                     if (!IsGameShowingWindow)
                     {
                         gameWindowHandle = Proc.MainWindowHandle.ToInt32();

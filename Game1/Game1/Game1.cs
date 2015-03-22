@@ -58,7 +58,7 @@ namespace Game1
                             SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
                             SCALE_SPEED_TO_UNSELECTED = 0.1,
-                            SCALE_ICON_TO_BACKGROUND = 0.9,
+                            SCALE_ICON_TO_BACKGROUND = SCALE_UNSELECTED,
                             SCALE_ICON_TO_FOREGROUND = 1.4,
                             SCALE_ICON_TO_FOREGROUND_SPEED = 0.0025,
                             SCALE_ICON_TO_BACKGROUND_SPEED = 0.0025,                            

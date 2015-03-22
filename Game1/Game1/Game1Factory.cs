@@ -170,7 +170,7 @@ namespace Game1
             rc.RotateSpeed = 0;
             sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = 12;
+            sc.ScaleTarget = 16;
             sc.ScaleSpeed = 0.1;
             sprite.AddComponent(sc);
             return sprite;
