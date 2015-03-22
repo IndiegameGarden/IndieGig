@@ -67,6 +67,13 @@ namespace Game1
             afc.FadeTarget = 1;
             afc.FadeSpeed = 0.2;
             afc.IsFading = true;
+            
+            // check if music is done playing - if so, reset to begin
+            var ac = Game1.InstanceGame1.Music.GetComponent<AudioComp>();
+            if (ac.SimTime > ac.AudioScript.Duration)
+            {
+                ac.SimTime = 0;
+            }
 
             // status
             this.CopyStatusFrom(installTask);

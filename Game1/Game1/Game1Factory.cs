@@ -27,6 +27,13 @@ namespace Game1
     /// </summary>
     public class Game1Factory
     {
+        /// <summary>
+        /// UI constants
+        /// </summary>
+        public const double MUSIC_AMPLITUDE = 0.618,
+                            BACKGROUND_STAR_SCALE = 2.0;
+
+
         private static Game1Factory _instance = null;
         private Game1 _game;
 
@@ -120,21 +127,11 @@ namespace Game1
             }
         }
     
-        void ScaleModifierScript(ScriptContext ctx, double value)
-        {
-            ctx.Entity.GetComponent<ScaleComp>().ScaleModifier *= 0.5 + ctx.Entity.GetComponent<PositionComp>().Position.X;
-        }
-
-        void RotateModifierScript(ScriptContext ctx, double value)
-        {
-            ctx.Entity.GetComponent<DrawComp>().DrawRotation = (float)value;
-        }
-
         public Entity CreateMusic()
         {
             var soundScript = new SoundEvent("Music");
             var ev = new SampleSoundEvent("star.ogg");
-            ev.Amplitude = 0.5;
+            ev.Amplitude = MUSIC_AMPLITUDE;
             soundScript.AddEvent(0.5, ev);
             var e = TTFactory.CreateAudiolet(soundScript);
             e.AddComponent(new AudioFadingComp());
@@ -152,7 +149,7 @@ namespace Game1
             rc.RotateSpeed = 0;
             sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = 2;
+            sc.ScaleTarget = BACKGROUND_STAR_SCALE;
             sc.ScaleSpeed = 0.1;
             sprite.AddComponent(sc);
             return sprite;

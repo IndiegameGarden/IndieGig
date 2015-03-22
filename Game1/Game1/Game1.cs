@@ -59,13 +59,15 @@ namespace Game1
                             SCALE_UNSELECTED = 1.0,
                             SCALE_SPEED_TO_UNSELECTED = 0.1,
                             SCALE_ICON_TO_BACKGROUND = SCALE_UNSELECTED,
-                            SCALE_ICON_TO_FOREGROUND = 1.4,
-                            SCALE_ICON_TO_FOREGROUND_SPEED = 0.0025,
+                            SCALE_ICON_TO_FOREGROUND = 1.42,
+                            SCALE_ICON_TO_FOREGROUND_SPEED = 0.005,
                             SCALE_ICON_TO_BACKGROUND_SPEED = 0.0025,                            
                             BACKGROUND_STAR_ROTATION_SPEED = 0.05,
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
                             BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
                             BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01,
+                            ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING = 2.0,
+                            ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING = 2.0,
                             MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
         public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_ICON_TO_FOREGROUND);
         public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
@@ -129,6 +131,7 @@ namespace Game1
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
             Music = Factory.CreateMusic();
+            //Music.GetComponent<AudioComp>().SimTime = Music.GetComponent<AudioComp>().AudioScript.Duration - 30.0; // DEBUG test
             TTFactory.BuildTo(MainChannel);
 
             base.LoadContent();
@@ -156,12 +159,12 @@ namespace Game1
                     GameRunProcess();
                     IconsShrinkingProcess();
                     BackgroundGameIconNewTextureProcess();
-                    BackgroundSpeedupRotationProcess(dt,5.0);
+                    BackgroundSpeedupRotationProcess(dt, ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING);
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING_PHASE1:
                     TopLineText.GetComponent<TextComp>().Text = "Playing";
-                    BackgroundSlowdownRotationProcess(dt, 3.0);
+                    BackgroundSlowdownRotationProcess(dt, ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING);
                     StatePlayingPhase1Process();
                     break;
                 
