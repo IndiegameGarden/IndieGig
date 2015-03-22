@@ -210,7 +210,9 @@ namespace Game1
                 if (kb.IsKeyDown(Keys.Left))    d = -1;
                 if (kb.IsKeyDown(Keys.Up))      d = -ICONCOUNT_HORIZONTAL;
                 if (kb.IsKeyDown(Keys.Down))    d = +ICONCOUNT_HORIZONTAL;
-                if (kb.IsKeyDown(Keys.Enter))
+                if (kb.IsKeyDown(Keys.Enter) ||
+                    kb.IsKeyDown(Keys.X) ||
+                    kb.IsKeyDown(Keys.Space) )
                 {
                     if (IsMouseForSelection)
                     {
