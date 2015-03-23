@@ -17,6 +17,7 @@ using Artemis.Interface;
 using TreeSharp;
 using IndiegameGarden.Base;
 using Game1.Comps;
+using Game1.Systems;
 
 namespace Game1
 {
@@ -41,7 +42,7 @@ namespace Game1
         public Entity SelectedGame, KeyboardSelectedGame;
         public Entity Music;
         public Entity BackgroundGameIcon, BackgroundRotatingStar;
-        public Entity TopLineText;
+        public Entity TopLineText, HelpText;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
         public GameRunner GameRunner;
@@ -54,22 +55,28 @@ namespace Game1
 
         // UI constants
         public const double ICON_SIZE = 128, // pixels
+
                             SCALE_SELECTED = 1.2,
-                            SCALE_SPEED_TO_SELECTED = 0.1,
                             SCALE_UNSELECTED = 1.0,
-                            SCALE_SPEED_TO_UNSELECTED = 0.1,
-                            SCALE_ICON_TO_BACKGROUND = SCALE_UNSELECTED,
-                            SCALE_ICON_TO_FOREGROUND = 1.42,
-                            SCALE_ICON_TO_FOREGROUND_SPEED = 0.005,
-                            SCALE_ICON_TO_BACKGROUND_SPEED = 0.0025,                            
+                            SCALE_WHILE_EXITING = 0.2,
+                            SCALE_TO_BACKGROUND = SCALE_UNSELECTED,
+                            SCALE_TO_FOREGROUND = 1.42,
+
+                            SPEED_SCALE_TO_SELECTED = 0.1,
+                            SPEED_SCALE_TO_UNSELECTED = 0.1,
+                            SPEED_SCALE_ICON_TO_FOREGROUND = 0.005,
+                            SPEED_SCALE_ICON_TO_BACKGROUND = 0.0025,
+                            SPEED_SCALE_ICON_WHILE_EXITING = 0.01,
+                            
                             BACKGROUND_STAR_ROTATION_SPEED = 0.05,
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
                             BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
                             BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01,
                             ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING = 2.0,
                             ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING = 2.0,
+                            MOVE_ICONS_ON_EXIT_SPEED = 300.0,
                             MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
-        public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_ICON_TO_FOREGROUND);
+        public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_TO_FOREGROUND);
         public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
 
         public Game1()
@@ -127,6 +134,9 @@ namespace Game1
             // text
             TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
             TopLineText.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
+            HelpText = TTFactory.CreateTextlet("\"C\" to run game config", "m41_lovebit");
+            HelpText.GetComponent<DrawComp>().LayerDepth = 0f;
+            HelpText.GetComponent<PositionComp>().Position = new Vector2(TTFactory.BuildScreen.Width-200f, 20f);
 
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
@@ -146,16 +156,18 @@ namespace Game1
             {
                 case GlobalStateEnum.STATE_BROWSING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
-                    TopLineText.GetComponent<TextComp>().Text = IsExiting ? "Goodbye" : "IndieGig";
                     GameSelectionProcess();
-                    GameLaunchingProcess();
-                    BackgroundGameIconNewTextureProcess();
-                    BackgroundSpeedupRotationProcess(dt);
+                    if (!IsExiting)
+                    {                        
+                        GameLaunchingProcess();
+                        BackgroundGameIconNewTextureProcess();
+                        BackgroundSpeedupRotationProcess(dt);
+                    }
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
-                    TopLineText.GetComponent<TextComp>().Text = "Launching";
+                    //TopLineText.GetComponent<TextComp>().Text = "Launching";
                     GameRunProcess();
                     IconsShrinkingProcess();
                     BackgroundGameIconNewTextureProcess();
@@ -163,7 +175,7 @@ namespace Game1
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING_PHASE1:
-                    TopLineText.GetComponent<TextComp>().Text = "Playing";
+                    //TopLineText.GetComponent<TextComp>().Text = "Playing";
                     BackgroundSlowdownRotationProcess(dt, ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING);
                     StatePlayingPhase1Process();
                     break;
@@ -191,6 +203,20 @@ namespace Game1
                     afc.FadeSpeed = MUSIC_FADEOUT_ON_EXIT_SPEED;
                     afc.IsFading = true;
                     IsExiting = true;
+                    TopLineText.GetComponent<TextComp>().Text = "Bye  :-)";
+
+                    // disable the regular layouter process
+                    ChannelMgr.Root.DisableSystem<BasicLayouterSystem>();
+
+                    // icons shrink
+                    foreach (Entity e in CollectionEntities)
+                    {
+                        e.GetComponent<ScaleComp>().ScaleTarget = SCALE_WHILE_EXITING;
+                        e.GetComponent<ScaleComp>().ScaleSpeed = SPEED_SCALE_ICON_WHILE_EXITING;
+                        var x = e.GetComponent<PositionComp>().Position.X;
+                        e.GetComponent<TargetMotionComp>().Target = new Vector2(x/10f,-450f-x); // fly away to top
+                        e.GetComponent<TargetMotionComp>().TargetVelocity = MOVE_ICONS_ON_EXIT_SPEED;
+                    }
                 }
             }
             if (IsExiting) 
@@ -266,8 +292,11 @@ namespace Game1
                 var sc = e.GetComponent<ScaleComp>();
                 if (SelectedGame == null && coll.Contains(e))
                 {
-                    sc.ScaleTarget = SCALE_SELECTED;
-                    sc.ScaleSpeed = SCALE_SPEED_TO_SELECTED;
+                    if (!IsExiting)
+                    {
+                        sc.ScaleTarget = SCALE_SELECTED;
+                        sc.ScaleSpeed = SPEED_SCALE_TO_SELECTED;
+                    }
                     SelectedGame = e;
                     BackgroundGameIcon.GetComponent<SpriteComp>().CenterToMiddle();
                     if (IsMouseForSelection)
@@ -276,10 +305,10 @@ namespace Game1
                         KeyboardSelectedGameIndex = CollectionEntities.IndexOf(KeyboardSelectedGame);
                     }
                 }
-                else
+                else if (!IsExiting)
                 {
                     sc.ScaleTarget = SCALE_UNSELECTED;
-                    sc.ScaleSpeed = SCALE_SPEED_TO_UNSELECTED;
+                    sc.ScaleSpeed = SPEED_SCALE_TO_UNSELECTED;
                 }
 
                 // biggest thing shows on top
@@ -410,13 +439,13 @@ namespace Game1
                 var sc = e.GetComponent<ScaleComp>();
                 if (SelectedGame != e)
                 {
-                    sc.ScaleTarget = SCALE_ICON_TO_BACKGROUND;
-                    sc.ScaleSpeed = SCALE_ICON_TO_BACKGROUND_SPEED;
+                    sc.ScaleTarget = SCALE_TO_BACKGROUND;
+                    sc.ScaleSpeed = SPEED_SCALE_ICON_TO_BACKGROUND;
                 }
                 else
                 {
-                    sc.ScaleTarget = SCALE_ICON_TO_FOREGROUND;
-                    sc.ScaleSpeed = SCALE_ICON_TO_FOREGROUND_SPEED;
+                    sc.ScaleTarget = SCALE_TO_FOREGROUND;
+                    sc.ScaleSpeed = SPEED_SCALE_ICON_TO_FOREGROUND;
                 }
                 var dc = e.GetComponent<DrawComp>();
                 dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
