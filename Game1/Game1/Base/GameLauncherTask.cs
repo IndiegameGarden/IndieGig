@@ -29,6 +29,11 @@ namespace IndiegameGarden.Base
         public GardenItem Game;
 
         /// <summary>
+        /// true if configuration program of game needs to run, false if game
+        /// </summary>
+        public bool isConfigure;
+
+        /// <summary>
         /// flag set true once the game window shows up during launch
         /// </summary>
         public bool IsGameShowingWindow = false;
@@ -39,9 +44,10 @@ namespace IndiegameGarden.Base
         [DllImportAttribute("User32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
-        public GameLauncherTask(GardenItem g)
+        public GameLauncherTask(GardenItem g, bool isConfigure = false)
         {
             this.Game = g;
+            this.isConfigure = isConfigure;
         }
 
         protected override void StartInternal()
@@ -80,16 +86,17 @@ namespace IndiegameGarden.Base
                 }
 
                 // check & start the .exe file
-                if (!File.Exists(Game.ExeFile))
+                var exeFile = isConfigure? Game.ExeConfig : Game.ExeFile;
+                if (!File.Exists(exeFile))
                 {
                     status = ITaskStatus.FAIL;
-                    statusMsg = "ExeFile not found: "+Game.ExeFile;
+                    statusMsg = "ExeFile not found: "+exeFile;
                     // set previous dir back
                     Directory.SetCurrentDirectory(cwd);
                     return;
                 }
 
-                Proc = System.Diagnostics.Process.Start(Game.ExeFile);
+                Proc = System.Diagnostics.Process.Start(exeFile);
                 Proc.Exited += new EventHandler(EvHandlerProcessExited);
                 Proc.EnableRaisingEvents = true;
                 // set previous dir back after starting process

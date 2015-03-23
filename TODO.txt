@@ -1,9 +1,11 @@
 TODO
+- music should go off when doing config for spelunky
+- text unreadable (in white)
 - icons move a bit in the wind
-- config.exe called when pressing C
 - fix game title hangup issue (ESC doesn't work anymore in PLAYING state)
 
 DONE
+- config.exe called when pressing C
 - fix ugly fast rotation on launch
 - music to restart when it is done and a game has been quit
 - speed up rotation when installing/unpacking zip

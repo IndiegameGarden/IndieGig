@@ -30,6 +30,7 @@ namespace Game1
         {
             STATE_BROWSING,
             STATE_LAUNCHING,
+            STATE_CONFIGURING,
             STATE_PLAYING_PHASE1,
             STATE_PLAYING_PHASE2
         }
@@ -134,9 +135,9 @@ namespace Game1
             // text
             TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
             TopLineText.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
-            HelpText = TTFactory.CreateTextlet("\"C\" to run game config", "m41_lovebit");
+            HelpText = TTFactory.CreateTextlet("", "Font1");
             HelpText.GetComponent<DrawComp>().LayerDepth = 0f;
-            HelpText.GetComponent<PositionComp>().Position = new Vector2(TTFactory.BuildScreen.Width-200f, 20f);
+            HelpText.GetComponent<PositionComp>().Position = new Vector2(TTFactory.BuildScreen.Width-400f, 20f);
 
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
@@ -163,6 +164,13 @@ namespace Game1
                         BackgroundGameIconNewTextureProcess();
                         BackgroundSpeedupRotationProcess(dt);
                     }
+                    break;
+
+                case GlobalStateEnum.STATE_CONFIGURING:
+                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
+                    GameRunProcess(true);
+                    IconsShrinkingProcess();
+                    BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
@@ -239,8 +247,13 @@ namespace Game1
                 if (kb.IsKeyDown(Keys.Left))    d = -1;
                 if (kb.IsKeyDown(Keys.Up))      d = -ICONCOUNT_HORIZONTAL;
                 if (kb.IsKeyDown(Keys.Down))    d = +ICONCOUNT_HORIZONTAL;
-                if (kb.IsKeyDown(Keys.Enter) ||
-                    kb.IsKeyDown(Keys.X) ||
+                if (kb.IsKeyDown(Keys.C))   // config
+                {
+                    if (SelectedGame != null)
+                        GlobalState = GlobalStateEnum.STATE_CONFIGURING;
+                }
+                else if (kb.IsKeyDown(Keys.Enter) ||
+                    kb.IsKeyDown(Keys.Z) ||
                     kb.IsKeyDown(Keys.Space) )
                 {
                     if (IsMouseForSelection)
@@ -315,6 +328,15 @@ namespace Game1
                 var dc = e.GetComponent<DrawComp>();
                 dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
             }
+
+            HelpText.GetComponent<TextComp>().Text = "";
+            if (SelectedGame != null)
+            {
+                var gi = SelectedGame.GetComponent<GardenItemComp>();
+                if (gi.Item.ExeConfig.Length > 0) {
+                    HelpText.GetComponent<TextComp>().Text = "\"C\" to run game config";
+                }
+            }
         }
 
         void GameLaunchingProcess()
@@ -381,12 +403,12 @@ namespace Game1
         /// <summary>
         /// Once a game is selected for launch, this will install/run it
         /// </summary>
-        void GameRunProcess()
+        void GameRunProcess(bool isConfigure = false)
         {
             if (SelectedGame != null)
             {
                 GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
-                GameRunner.TryRunGame(gi);
+                GameRunner.TryRunGame(gi,isConfigure);
             }
         }
 

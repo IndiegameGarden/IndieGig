@@ -26,15 +26,18 @@ namespace IndiegameGarden.Install
         InstallTask installTask;
         GameLauncherTask runTask;
         GardenItem game;
+        bool isConfigure;
 
         /// <summary>
         /// create new Install and Run task
         /// </summary>
         /// <param name="game">info of game to install and run</param>
-        public GameInstallRunTask(GardenItem game)
+        /// <param name="isConfigure">true if configuration program of game needs to run, false if game</param>
+        public GameInstallRunTask(GardenItem game, bool isConfigure)
         {
             this.game = game;
             status = ITaskStatus.CREATED;
+            this.isConfigure = isConfigure;
         }
 
         protected override void StartInternal()
@@ -75,7 +78,7 @@ namespace IndiegameGarden.Install
             // ready to run
             if (DoRun && status != ITaskStatus.FAIL)
             {
-                runTask = new GameLauncherTask(game);
+                runTask = new GameLauncherTask(game,isConfigure);
                 runTask.Start();
                 this.CopyStatusFrom(runTask);
             }

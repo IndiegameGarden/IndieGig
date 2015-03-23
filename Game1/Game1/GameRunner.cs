@@ -14,7 +14,7 @@ namespace Game1
     {
         public ITask GameRunTask;
 
-        public bool TryRunGame(GardenItem g)
+        public bool TryRunGame(GardenItem g, bool isConfigure)
         {
             // check if there's already an active task 
             if (GameRunTask != null)
@@ -23,7 +23,7 @@ namespace Game1
                     return false; // stop, only one at a time!
             }
 
-            ITask t = new GameRunnerTask(g);
+            ITask t = new GameRunnerTask(g, isConfigure);
             GameRunTask = new ThreadedTask(t);
             GameRunTask.Start();
             return true;
@@ -33,33 +33,40 @@ namespace Game1
     public class GameRunnerTask : Task
     {
         GardenItem gi;
+        bool isConfigure;
         GameInstallRunTask installTask;
 
-        public GameRunnerTask(GardenItem g)
+        public GameRunnerTask(GardenItem g, bool isConfigure)
         {
             this.gi = g;
+            this.isConfigure = isConfigure;
         }
 
         protected override void StartInternal()
         {
             // install game (via task)
-            installTask = new GameInstallRunTask(gi);
+            installTask = new GameInstallRunTask(gi,isConfigure);
             installTask.DoRun = false;
             installTask.Start();
 
-            // fade out music
             var afc = Game1.InstanceGame1.Music.GetComponent<AudioFadingComp>();
-            afc.FadeTarget = 0;
-            afc.FadeSpeed = 0.4;
-            afc.IsFading = true;
+            var ac = Game1.InstanceGame1.Music.GetComponent<AudioComp>();
 
-            // delayed state change
-            int dlyMs = (int) ( 1000 * Game1.BACKGROUND_STAR_ROTATION_SPEED / Game1.BACKGROUND_ROTATION_SLOWDOWN_SPEED ) + 100;
-            var stateChangeTask = new ThreadedTask(new DelayedStateChanger(dlyMs, Game1.GlobalStateEnum.STATE_PLAYING_PHASE1));
-            stateChangeTask.Start();
+            if (!isConfigure)
+            {
+                // fade out music
+                afc.FadeTarget = 0;
+                afc.FadeSpeed = 0.4;
+                afc.IsFading = true;
+
+                // delayed state change
+                int dlyMs = (int)(1000 * Game1.BACKGROUND_STAR_ROTATION_SPEED / Game1.BACKGROUND_ROTATION_SLOWDOWN_SPEED) + 100;
+                var stateChangeTask = new ThreadedTask(new DelayedStateChanger(dlyMs, Game1.GlobalStateEnum.STATE_PLAYING_PHASE1));
+                stateChangeTask.Start();
+            }
 
             // run game
-            installTask = new GameInstallRunTask(gi);
+            installTask = new GameInstallRunTask(gi, isConfigure);
             installTask.DoRun = true;
             installTask.Start();
 
@@ -69,7 +76,6 @@ namespace Game1
             afc.IsFading = true;
             
             // check if music is done playing - if so, reset to begin
-            var ac = Game1.InstanceGame1.Music.GetComponent<AudioComp>();
             if (ac.SimTime > ac.AudioScript.Duration)
             {
                 ac.SimTime = 0;
