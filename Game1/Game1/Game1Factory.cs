@@ -73,7 +73,7 @@ namespace Game1
         /// <returns></returns>
         public Entity CreateIconsLayer()
         {
-            var iconsLayer = TTFactory.CreateFxScreenlet("GameIcon");
+            var iconsLayer = TTFactory.CreateScreenlet(true); // TTFactory.CreateFxScreenlet("GameIcon");
             Effect fx = iconsLayer.GetComponent<ScreenComp>().SpriteBatch.effect;
             TTFactory.AddScript(iconsLayer, GameIconFxParametersScript);
             return iconsLayer;

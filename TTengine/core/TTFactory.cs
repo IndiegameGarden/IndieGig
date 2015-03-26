@@ -188,10 +188,11 @@ namespace TTengine.Core
         }
 
         /// <summary>
-        /// Creates a Screenlet that renders to default backbuffer
+        /// Creates a Screenlet that renders to its own buffer or default backbuffer
+        /// <param name="hasRenderBuffer">if true renders to own buffer, if false to default backbuffer</param>
         /// </summary>
         /// <returns></returns>
-        public static Entity CreateScreenlet(bool hasRenderBuffer)
+        public static Entity CreateScreenlet(bool hasRenderBuffer=false)
         {
             var sc = new ScreenComp(hasRenderBuffer);
             var e = CreateEntity();
