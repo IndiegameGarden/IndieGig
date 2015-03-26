@@ -42,7 +42,7 @@ namespace Game1
         public Entity MousePointer;
         public Entity SelectedGame, KeyboardSelectedGame;
         public Entity Music;
-        public Entity BackgroundGameIcon, BackgroundRotatingStar;
+        public Entity BackgroundGameIcon, BackgroundGameIconOld, BackgroundRotatingStar;
         public Entity TopLineText, HelpText;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
@@ -75,7 +75,7 @@ namespace Game1
                             BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01,
                             ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING = 2.0,
                             ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING = 2.0,
-                            MOVE_ICONS_ON_EXIT_SPEED = 300.0,
+                            MOVE_ICONS_ON_EXIT_SPEED = 800.0,
                             MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
         public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_TO_FOREGROUND);
         public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
@@ -119,9 +119,11 @@ namespace Game1
             ChannelMgr.AddChannel(MainChannel);
             //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
-            // background
+            // background icon
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
-            BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
+            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon();
+            //BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
+            //BackgroundRotatingStar.IsEnabled = false;
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
@@ -135,7 +137,7 @@ namespace Game1
             // text
             TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
             TopLineText.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
-            HelpText = TTFactory.CreateTextlet("", "Font1");
+            HelpText = TTFactory.CreateTextlet("");
             HelpText.GetComponent<PositionComp>().Depth = 0f;
             HelpText.GetComponent<PositionComp>().Position = new Vector2(TTFactory.BuildScreen.Width-400f, 20f);
 
@@ -158,11 +160,12 @@ namespace Game1
                 case GlobalStateEnum.STATE_BROWSING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameSelectionProcess();
+                    BackgroundGameIconFadeTextureProcess();
                     if (!IsExiting)
                     {                        
-                        GameLaunchingProcess();
-                        BackgroundGameIconNewTextureProcess();
-                        BackgroundSpeedupRotationProcess(dt);
+                        GameLaunchingProcess();                        
+                        //BackgroundGameIconNewTextureProcess();
+                        //BackgroundSpeedupRotationProcess(dt);
                     }
                     break;
 
@@ -170,7 +173,7 @@ namespace Game1
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess(true);
                     IconsShrinkingProcess();
-                    BackgroundGameIconNewTextureProcess();
+                    //BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
@@ -178,13 +181,13 @@ namespace Game1
                     //TopLineText.GetComponent<TextComp>().Text = "Launching";
                     GameRunProcess();
                     IconsShrinkingProcess();
-                    BackgroundGameIconNewTextureProcess();
-                    BackgroundSpeedupRotationProcess(dt, ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING);
+                    //BackgroundGameIconNewTextureProcess();
+                    //BackgroundSpeedupRotationProcess(dt, ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING);
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING_PHASE1:
                     //TopLineText.GetComponent<TextComp>().Text = "Playing";
-                    BackgroundSlowdownRotationProcess(dt, ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING);
+                    //BackgroundSlowdownRotationProcess(dt, ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING);
                     StatePlayingPhase1Process();
                     break;
                 
@@ -198,7 +201,7 @@ namespace Game1
 
         void EscapeKeyProcess(double dt)
         {
-            CanExit = (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed > 0.02) ;
+            CanExit = true; // (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed > 0.02);
 
             if (CanExit)
             {
@@ -229,9 +232,9 @@ namespace Game1
             }
             if (IsExiting) 
             {
-                BackgroundSlowdownRotationProcess(dt,2.0);
-                if (Music.GetComponent<AudioComp>().Ampl == 0 &&
-                    BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0)
+                //BackgroundSlowdownRotationProcess(dt,2.0);
+                if (Music.GetComponent<AudioComp>().Ampl == 0 /*&&
+                    BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0 */ )
                     Exit();
             }
         }
@@ -311,7 +314,17 @@ namespace Game1
                         sc.ScaleSpeed = SPEED_SCALE_TO_SELECTED;
                     }
                     SelectedGame = e;
-                    BackgroundGameIcon.GetComponent<SpriteComp>().CenterToMiddle();
+
+                    // swap trick
+                    Entity tmp;
+                    tmp = BackgroundGameIconOld;
+                    BackgroundGameIconOld = BackgroundGameIcon;
+                    BackgroundGameIcon = tmp;
+
+                    // new icon                    
+                    BackgroundGameIcon.GetComponent<SpriteComp>().Texture = SelectedGame.GetComponent<SpriteComp>().Texture;
+                    BackgroundGameIcon.GetComponent<DrawComp>().Alpha = 0f;                    
+
                     if (IsMouseForSelection)
                     {
                         KeyboardSelectedGame = SelectedGame;
@@ -351,6 +364,32 @@ namespace Game1
                     GlobalState = GlobalStateEnum.STATE_LAUNCHING;
                 }
             }
+        }
+
+        void BackgroundGameIconFadeTextureProcess()
+        {
+            var dc = BackgroundGameIcon.GetComponent<DrawComp>();
+            if (dc != null)
+            {
+                if (dc.Alpha < 1f)
+                    dc.Alpha += (1f/255f);
+                else
+                    dc.Alpha = 1f;
+            }
+
+            if (BackgroundGameIconOld != null)
+            {
+                var dcOld = BackgroundGameIconOld.GetComponent<DrawComp>();
+                if (dcOld != null)
+                {
+                    if (dcOld.Alpha > 0f)
+                        dcOld.Alpha -= (1f / 255f);
+                    else
+                    {
+                        dcOld.Alpha = 0f;
+                    }
+                }
+            }                
         }
 
         /// <summary>

@@ -59,23 +59,17 @@ namespace Game1
             String fn = Path.Combine ( GardenConfig.Instance.ThumbnailsFolder, gi.ThumbnailFile);
             Entity e = TTFactory.CreateSpritelet( fn );
             e.AddComponent(new ScaleComp(scale));
-            e.GetComponent<ScaleComp>().Scale = 0.1;
+            e.GetComponent<ScaleComp>().Scale = 0.4;
             e.AddComponent(new TargetMotionComp());
             e.AddComponent(new GardenItemComp(gi));
             e.GetComponent<SpriteComp>().CenterToMiddle();
-            e.AddComponent(new TextComp("Test"));
-
-            /*
-            Entity tx = TTFactory.CreateTextlet("Test");
-            e.GetComponent<PositionComp>().AddChild(tx.GetComponent<PositionComp>());
-            e.GetComponent<ScaleComp>().AddChild(tx.GetComponent<ScaleComp>());
-             */
-            TTFactory.AddModifier(e, SetLayerDepthAsText);
+            //e.AddComponent(new TextComp("Test"));
+            //TTFactory.AddModifier(e, SetLayerDepthAsText); // DEBUG
             return e;
         }
 
         /// <summary>
-        /// Script to write the layerdepth of parent sprite, as a text value of the textlet
+        /// Debug Script to write the layerdepth of parent sprite, as a text value of the textlet
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="val"></param>
@@ -92,8 +86,8 @@ namespace Game1
         public Entity CreateIconsLayer()
         {
             var iconsLayer = TTFactory.CreateScreenlet(true); // TTFactory.CreateFxScreenlet("GameIcon");
-            Effect fx = iconsLayer.GetComponent<ScreenComp>().SpriteBatch.effect;
-            TTFactory.AddScript(iconsLayer, GameIconFxParametersScript);
+            //Effect fx = iconsLayer.GetComponent<ScreenComp>().SpriteBatch.effect;
+            //TTFactory.AddScript(iconsLayer, GameIconFxParametersScript);
             return iconsLayer;
         }
 
@@ -178,15 +172,15 @@ namespace Game1
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
             var sprite = TTFactory.CreateSpritelet("supernova128");
             sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
-            sprite.GetComponent<DrawComp>().LayerDepth = 0.7f;
+            sprite.GetComponent<DrawComp>().LayerDepth = 0.99f;
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
-            var rc = new RotateComp();
-            rc.RotateSpeed = 0;
-            sprite.AddComponent(rc);
+            //var rc = new RotateComp();
+            //rc.RotateSpeed = 0;
+            //sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = 16;
-            sc.ScaleSpeed = 0.1;
+            sc.ScaleTarget = Game1.InstanceGame1.MainChannel.Screen.Width / Game1.ICON_SIZE ;
+            sc.ScaleSpeed = 10;
             sprite.AddComponent(sc);
             return sprite;
         }
