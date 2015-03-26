@@ -18,6 +18,8 @@ namespace TTengine.Systems
 
         public override void Process(Entity entity, ScaleComp sc)
         {
+            sc._isScaleAbsCalculated = false;
+
             // scaling logic towards target
             if (sc.ScaleSpeed > 0)
             {
@@ -42,7 +44,8 @@ namespace TTengine.Systems
             // set scale for drawing
             if (entity.HasComponent<DrawComp>())
             {
-                entity.GetComponent<DrawComp>().DrawScale = (float) (sc.Scale * sc.ScaleModifier);
+                // FIXME calculation depends on parents which may have not yet been simulated this round
+                entity.GetComponent<DrawComp>().DrawScale = (float) (sc.ScaleAbs * sc.ScaleModifier);
             }
 
             sc.ScaleModifier = 1; // the ModifierSystem may adapt this one later. Each round reset to 1.

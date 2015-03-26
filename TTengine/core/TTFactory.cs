@@ -167,7 +167,7 @@ namespace TTengine.Core
         /// <returns></returns>
         public static Entity CreateTextlet(string text)
         {
-            return CreateTextlet(text, "TTDebugFont");
+            return CreateTextlet(text, "Font1");
         }
 
         /// <summary>
@@ -180,8 +180,7 @@ namespace TTengine.Core
         {
             Entity e = CreateDrawlet();
             e.AddComponent(new ScaleComp());
-            TextComp tc = new TextComp(text);
-            tc.Font = _game.Content.Load<SpriteFont>(fontName); // FIXME allow other fonts
+            TextComp tc = new TextComp(text, fontName);
             e.AddComponent(tc);
             e.Refresh();
             return e;

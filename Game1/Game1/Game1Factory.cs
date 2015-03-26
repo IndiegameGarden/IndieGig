@@ -63,7 +63,25 @@ namespace Game1
             e.AddComponent(new TargetMotionComp());
             e.AddComponent(new GardenItemComp(gi));
             e.GetComponent<SpriteComp>().CenterToMiddle();
+            e.AddComponent(new TextComp("Test"));
+
+            /*
+            Entity tx = TTFactory.CreateTextlet("Test");
+            e.GetComponent<PositionComp>().AddChild(tx.GetComponent<PositionComp>());
+            e.GetComponent<ScaleComp>().AddChild(tx.GetComponent<ScaleComp>());
+             */
+            TTFactory.AddModifier(e, SetLayerDepthAsText);
             return e;
+        }
+
+        /// <summary>
+        /// Script to write the layerdepth of parent sprite, as a text value of the textlet
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="val"></param>
+        void SetLayerDepthAsText(ScriptContext ctx, double val)
+        {
+            ctx.Entity.GetComponent<TextComp>().Text = ctx.Entity.GetComponent<PositionComp>().Depth.ToString();
         }
 
         /// <summary>

@@ -136,7 +136,7 @@ namespace Game1
             TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
             TopLineText.GetComponent<PositionComp>().Position = new Vector2(80f, 20f);
             HelpText = TTFactory.CreateTextlet("", "Font1");
-            HelpText.GetComponent<DrawComp>().LayerDepth = 0f;
+            HelpText.GetComponent<PositionComp>().Depth = 0f;
             HelpText.GetComponent<PositionComp>().Position = new Vector2(TTFactory.BuildScreen.Width-400f, 20f);
 
             // music - build it to Root channel so it keeps playing always
@@ -325,8 +325,8 @@ namespace Game1
                 }
 
                 // biggest thing shows on top
-                var dc = e.GetComponent<DrawComp>();
-                dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
+                var pc = e.GetComponent<PositionComp>();
+                pc.Depth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
             }
 
             HelpText.GetComponent<TextComp>().Text = "";
@@ -469,8 +469,8 @@ namespace Game1
                     sc.ScaleTarget = SCALE_TO_FOREGROUND;
                     sc.ScaleSpeed = SPEED_SCALE_ICON_TO_FOREGROUND;
                 }
-                var dc = e.GetComponent<DrawComp>();
-                dc.LayerDepth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
+                var pc = e.GetComponent<PositionComp>();
+                pc.Depth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
             }
              
         }

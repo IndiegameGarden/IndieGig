@@ -8,7 +8,7 @@ namespace TTengine.Comps
     /// <summary>
     /// Component for scale modification
     /// </summary>
-    public class ScaleComp : IComponent
+    public class ScaleComp : Comp
     {
         public ScaleComp():
             this(1)
@@ -33,6 +33,28 @@ namespace TTengine.Comps
         /// speed for scaling towards ScaleTarget (can be 0)
         /// </summary>
         public double ScaleSpeed = 0;
+
+        /// <summary>
+        /// The absolute position, obtained by (Position + PositionModifier + Parent.PositionAbs)
+        /// </summary>
+        public double ScaleAbs
+        {
+            get
+            {
+                if (_isScaleAbsCalculated)
+                    return _scaleAbs;
+                if (Parent == null)
+                    _scaleAbs = Scale ;
+                else
+                    _scaleAbs = Scale * (Parent as ScaleComp).ScaleAbs;
+                _isScaleAbsCalculated = true;
+                return _scaleAbs;
+            }
+        }
+
+        // keep track of whether PositionAbs has been calculated for this comp during this update round.
+        internal bool _isScaleAbsCalculated = false;
+        internal double _scaleAbs = 0;
 
     }
 }
