@@ -485,8 +485,8 @@ namespace Game1
 
         void StatePlayingPhase1Process()
         {
-            // when rotation has stopped - move to next phase (still screen)
-            if (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0)
+            // when music has stopped - move to next phase (still screen)
+            if (Music.GetComponent<AudioComp>().Ampl <= 0)
             {
                 this.GlobalState = GlobalStateEnum.STATE_PLAYING_PHASE2;
             }

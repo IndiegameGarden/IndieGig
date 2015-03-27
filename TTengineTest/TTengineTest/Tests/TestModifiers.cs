@@ -34,7 +34,7 @@ namespace TTengineTest
             sineFunc.Offset = 1;
             TTFactory.AddModifier(ball, MyScaleModifierScript, sineFunc);
 
-            // modifier script to adapt rotation
+            // modifier script to adapt rotation without needing a RotateComp on it.
             TTFactory.AddModifier(ball, MyRotateModifierScript);
 
             // ball 2
@@ -61,7 +61,7 @@ namespace TTengineTest
 
         void MyScaleModifierScript(ScriptContext ctx, double value)
         {
-            ctx.Entity.GetComponent<ScaleComp>().ScaleModifier *= (0.4 + value * 0.3);            
+            ctx.Entity.GetComponent<ScaleComp>().Scale = (0.4 + value * 0.3);            
         }
 
         void MyRotateModifierScript(ScriptContext ctx, double value)

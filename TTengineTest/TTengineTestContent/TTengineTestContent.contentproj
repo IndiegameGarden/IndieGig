@@ -57,8 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TTDebugFont.spritefont">
-      <Name>TTDebugFont</Name>
+    <Compile Include="Font1.spritefont">
+      <Name>Font1</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

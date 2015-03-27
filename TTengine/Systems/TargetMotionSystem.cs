@@ -50,7 +50,7 @@ namespace TTengine.Systems
     #endregion
 
     /// <summary>The movement system.</summary>
-    [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = SystemsSchedule.TargetMotionSystem)]
+    [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = SystemsSchedule.TargetMoveSystem)]
     public class TargetMotionSystem : EntityComponentProcessingSystem<PositionComp, TargetMotionComp>
     {
         double dt = 0;

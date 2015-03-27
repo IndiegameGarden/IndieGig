@@ -20,41 +20,35 @@ namespace TTengine.Comps
             this.Scale = scale;
         }
 
+        /// <summary>
+        /// the relative size scaling factor, 1.0 being normal scale
+        /// </summary>
         public double Scale = 1;
 
-        public double ScaleModifier = 1;
-        
         /// <summary>
-        /// set target for Scale value
+        /// set a target for Scale value
         /// </summary>
         public double ScaleTarget = 1;
 
         /// <summary>
-        /// speed for scaling towards ScaleTarget (can be 0)
+        /// speed for changing Scale towards ScaleTarget (speed can be 0: no change)
         /// </summary>
         public double ScaleSpeed = 0;
 
         /// <summary>
-        /// The absolute position, obtained by (Position + PositionModifier + Parent.PositionAbs)
+        /// The absolute scale, obtained by multiplying this Entity's scale with its
+        /// parent absolute scale.
         /// </summary>
         public double ScaleAbs
         {
             get
             {
-                if (_isScaleAbsCalculated)
-                    return _scaleAbs;
                 if (Parent == null)
-                    _scaleAbs = Scale ;
+                    return Scale;
                 else
-                    _scaleAbs = Scale * (Parent as ScaleComp).ScaleAbs;
-                _isScaleAbsCalculated = true;
-                return _scaleAbs;
+                    return Scale * (Parent as ScaleComp).ScaleAbs;                
             }
         }
-
-        // keep track of whether PositionAbs has been calculated for this comp during this update round.
-        internal bool _isScaleAbsCalculated = false;
-        internal double _scaleAbs = 0;
 
     }
 }

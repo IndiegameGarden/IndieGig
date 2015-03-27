@@ -14,9 +14,8 @@ namespace TTengine.Systems
 
     #endregion
 
-    /// <summary>The movement system.</summary>
     [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = SystemsSchedule.RotateSystem)]
-    public class RotateSystem : EntityComponentProcessingSystem<RotateComp, DrawComp>
+    public class RotateSystem : EntityComponentProcessingSystem<RotateComp>
     {
         double dt = 0;
 
@@ -25,13 +24,22 @@ namespace TTengine.Systems
             dt = TimeSpan.FromTicks(EntityWorld.Delta).TotalSeconds;
         }
 
-        /// <summary>Processes the specified entity.</summary>
-        /// <param name="entity">The entity.</param>
+        public override void Process(Entity entity, RotateComp rotComp)
+        {
+            if (rotComp.RotateSpeed > 0)
+                rotComp.Rotate += rotComp.RotateSpeed * dt;            
+        }
+    }
+
+    [ArtemisEntitySystem(GameLoopType = GameLoopType.Update, Layer = SystemsSchedule.RotateToDrawrotateSystem)]
+    public class RotateToDrawrotateSystem : EntityComponentProcessingSystem<RotateComp, DrawComp>
+    {
+
         public override void Process(Entity entity, RotateComp rotComp, DrawComp drawComp)
         {
-            rotComp.Rotate += rotComp.RotateSpeed * dt;
-            drawComp.DrawRotation = (float)rotComp.Rotate;
+            drawComp.DrawRotation = (float)rotComp.RotateAbs;
         }
+
     }
 
 }
