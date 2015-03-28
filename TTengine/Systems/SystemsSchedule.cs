@@ -18,6 +18,7 @@ namespace TTengine.Systems
             TargetMoveSystem    = 2,
             RotateSystem        = 2,
             ScaleSystem         = 2,
+            MoveAbsSystem       = 3,
             ScaleToDrawscaleSystem = 3,
             RotateToDrawrotateSystem = 3,
             BlinkSystem         = 3,

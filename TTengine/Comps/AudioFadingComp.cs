@@ -14,7 +14,7 @@ namespace TTengine.Comps
     {
         public double FadeTarget = 1.0;
         public double FadeSpeed = 0.1;
-        public bool IsFading = false;
+        public bool   IsFading = false;
 
         public AudioFadingComp()
         {

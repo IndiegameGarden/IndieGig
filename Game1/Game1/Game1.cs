@@ -117,14 +117,10 @@ namespace Game1
             // main (menu) channel
             MainChannel = TTFactory.CreateChannel(Color.Black, false);
             ChannelMgr.AddChannel(MainChannel);
-            //gameChannel.DisableSystem<SpriteCollisionSystem>();
 
             // background icon
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
-            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon("bentologo");
-            BackgroundGameIconOld.GetComponent<PositionComp>().Position += new Vector2(256f, 0f);
-            //BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
-            //BackgroundRotatingStar.IsEnabled = false;
+            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon();
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
@@ -145,7 +141,6 @@ namespace Game1
             // music - build it to Root channel so it keeps playing always
             TTFactory.BuildTo(ChannelMgr.Root);
             Music = Factory.CreateMusic();
-            //Music.GetComponent<AudioComp>().SimTime = Music.GetComponent<AudioComp>().AudioScript.Duration - 30.0; // DEBUG test
             TTFactory.BuildTo(MainChannel);
 
             base.LoadContent();
@@ -383,21 +378,25 @@ namespace Game1
             var dc = BackgroundGameIcon.GetComponent<DrawComp>();
             if (dc != null)
             {
-                if (dc.Alpha < 1f)
-                    dc.Alpha += (1f/255f);
-                if (dc.Alpha >= 1f)
-                    dc.Alpha = 1f;
-                dc.DrawColor = new Color(dc.Alpha, dc.Alpha, dc.Alpha, dc.Alpha);
+                var a = dc.Alpha;
+                if (a < 1f)
+                {
+                    a += (1f / 255f);
+                    if (a >= 1f) a = 1f;
+                    dc.DrawColor = Color.White * a;
+                }
             }
 
             var dcOld = BackgroundGameIconOld.GetComponent<DrawComp>();
             if (dcOld != null)
             {
-                if (dcOld.Alpha > 0f)
-                    dcOld.Alpha -= (1f / 255f);
-                if (dcOld.Alpha <= 0f)
-                    dcOld.Alpha = 0f;
-                dc.DrawColor = new Color(dc.Alpha, dc.Alpha, dc.Alpha, dc.Alpha);
+                var a = dcOld.Alpha;
+                if (a > 0f)
+                {
+                    a -= (1f / 255f);
+                    if (a <= 0f) a = 0f;
+                    dcOld.DrawColor = Color.White * a;
+                }
             }
 
         }

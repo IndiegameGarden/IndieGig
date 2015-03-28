@@ -1,11 +1,12 @@
-// (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
+// (c) 2010-2015 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
 // background shader - RGB data contains a thumbnail or image from which colors are used
 // and alpha channel should contain intensity of another image (i.e. BW image 8-bit encoded)
 
-// variables set from the outside - must be same for all sprites in a batch rendered with this shader.
+// --- variables set from the outside 
+// must be same for all sprites in a batch rendered with this shader.
 // linear time - for animation control
-//float Time = 0;
+// float Time = 0;
 // center of rgb sprite
 float2 Center = float2(0.5,0.5);
 float Scale = 1.0;
@@ -43,7 +44,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	float lWarped = (1+0.1*random(texCoord))*lDif;
 	//res = tex2D(TextureSampler, (vDif/Scale+Center) ) ;		  
 	res  = tex2D(TextureSampler, (vDifNorm*lWarped/Scale+Center) ) ;		  
-	float bri = (res.r + res.g + res.b) / 3.0 ;
+	float bri = (res.r + res.g + res.b) / 3.0 * color.a;
 	
 	//float alpha = res.a * (lWarped);
 	//if (alpha < 0) alpha = 0;
@@ -58,7 +59,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 
 	//res = (1-alpha) * float4(0,0,0,1) + (alpha) * res;
 	//float alphaOut = 1 - alpha*alpha - bri ;
-	float alphaOut = 1 - (bri/3.0) ;
+	float alphaOut = bri; //1 - (bri/3.0) ;
 	if (alphaOut < 0)
 		alphaOut = 0;
 	if (alphaOut > 1)

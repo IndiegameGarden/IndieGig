@@ -92,31 +92,24 @@ namespace TTengine.Comps
             }
         }
 
-        /// <summary>This value is added to Position during a single update cycle only. After that, it's
-        /// reset to Zero.</summary>
-        public Vector2 PositionModifier = Vector2.Zero;
-
         /// <summary>
-        /// The absolute position, obtained by (Position + PositionModifier + Parent.PositionAbs)
+        /// The absolute position, obtained by (Position + Parent.PositionAbs)
         /// </summary>
         public Vector2 PositionAbs
         {
             get
             {
-                if (IsPositionAbsCalculated)
+                if (_isPositionAbsSet)
                     return _positionAbs;
-                if (Parent == null)
-                    _positionAbs = Position + PositionModifier;
+                else if (Parent != null)
+                    return Position + (Parent as PositionComp).PositionAbs;
                 else
-                    _positionAbs = Position + PositionModifier + (Parent as PositionComp).PositionAbs;
-                IsPositionAbsCalculated = true;
-                return _positionAbs;
+                    return Position;
             }
         }
 
-        // keep track of whether PositionAbs has been calculated for this comp during this update round.
-        internal bool IsPositionAbsCalculated = false;
         internal Vector2 _positionAbs = Vector2.Zero;
+        internal bool    _isPositionAbsSet = false;
 
         /// <summary>Gets or sets the x coordinate.</summary>
         /// <value>The X.</value>
