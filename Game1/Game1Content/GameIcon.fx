@@ -1,4 +1,4 @@
-// (c) 2010-2014 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
+// (c) 2010-2015 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
 // center constant
 const float2 Center = float2(0.5,0.5);

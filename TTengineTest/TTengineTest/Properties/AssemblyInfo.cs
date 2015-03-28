@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("TTengineTest")]
 [assembly: AssemblyDescription("Visual tests for TTengine")]
 [assembly: AssemblyCompany("IndiegameGarden.com")]
-[assembly: AssemblyCopyright("Copyright © IndiegameGarden.com 2010-2014")]
+[assembly: AssemblyCopyright("Copyright © IndiegameGarden.com 2010-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
