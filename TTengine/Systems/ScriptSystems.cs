@@ -26,7 +26,8 @@ namespace TTengine.Systems
 
         public override void Process(Entity entity, ScriptComp sc)
         {
-            sc.UpdateComp(dt);
+            sc.Dt = dt;
+            sc.SimTime += dt;
             ctx.Entity = entity;
             ctx.SimTime = sc.SimTime;
             foreach(IScript script in sc.Scripts)

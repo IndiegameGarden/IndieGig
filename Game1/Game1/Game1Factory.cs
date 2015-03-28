@@ -63,6 +63,7 @@ namespace Game1
             e.AddComponent(new TargetMotionComp());
             e.AddComponent(new GardenItemComp(gi));
             e.GetComponent<SpriteComp>().CenterToMiddle();
+            e.GetComponent<PositionComp>().Position = Game1.InstanceGame1.MainChannel.Screen.Center;
             //e.AddComponent(new TextComp("Test"));
             //TTFactory.AddModifier(e, SetLayerDepthAsText); // DEBUG
             return e;
@@ -167,10 +168,10 @@ namespace Game1
             return sprite;
         }
 
-        public Entity CreateBackgroundGameIcon()
+        public Entity CreateBackgroundGameIcon(string spriteName = "supernova128")
         {
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
-            var sprite = TTFactory.CreateSpritelet("supernova128");
+            var sprite = TTFactory.CreateSpritelet(spriteName);
             sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
             sprite.GetComponent<DrawComp>().LayerDepth = 0.99f;
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
@@ -179,7 +180,7 @@ namespace Game1
             //rc.RotateSpeed = 0;
             //sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = Game1.InstanceGame1.MainChannel.Screen.Width / Game1.ICON_SIZE ;
+            sc.ScaleTarget = 2; // Game1.InstanceGame1.MainChannel.Screen.Width / Game1.ICON_SIZE;
             sc.ScaleSpeed = 10;
             sprite.AddComponent(sc);
             return sprite;

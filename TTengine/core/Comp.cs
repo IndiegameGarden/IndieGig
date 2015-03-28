@@ -33,14 +33,6 @@ namespace TTengine.Core
 
         private Comp _parent = null;
 
-        /// <summary>Called by Systems, to conveniently update any of the Comp members that need updating each cycle.</summary>
-        /// <param name="dt">Time delta in seconds for current Update round</param>
-        public void UpdateComp(double dt)
-        {
-            Dt = dt;
-            SimTime += dt;                
-        }
-
         public void AddChild(Comp child)
         {
             if (Children == null)

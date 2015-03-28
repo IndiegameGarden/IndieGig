@@ -23,12 +23,13 @@ namespace TTengine.Systems
         }
 
         // TODO: check if non-active entities are also called in this process method. For all systems.
-        public override void Process(Entity entity, BlinkComp bcomp)
+        public override void Process(Entity entity, BlinkComp bc)
         {
-            bcomp.UpdateComp(dt);
-            double t = bcomp.SimTime % bcomp.TimePeriod;
+            bc.Dt = dt;
+            bc.SimTime += dt;
+            double t = bc.SimTime % bc.TimePeriod;
             bool isVisible;
-            if (t <= bcomp.TimeOn)
+            if (t <= bc.TimeOn)
                 isVisible = true;
             else
                 isVisible = false;

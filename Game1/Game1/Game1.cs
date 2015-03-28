@@ -51,7 +51,7 @@ namespace Game1
         public Vector2 LastMousePos;
         public bool IsExiting = false,
                     CanExit = false,
-                    IsMouseForSelection = true,
+                    IsMouseForSelection = false,
                     IsReadyForKeypress = true;
 
         // UI constants
@@ -59,7 +59,7 @@ namespace Game1
 
                             SCALE_SELECTED = 1.2,
                             SCALE_UNSELECTED = 1.0,
-                            SCALE_WHILE_EXITING = 0.2,
+                            SCALE_WHILE_EXITING = 0.0002,
                             SCALE_TO_BACKGROUND = SCALE_UNSELECTED,
                             SCALE_TO_FOREGROUND = 1.42,
 
@@ -67,7 +67,7 @@ namespace Game1
                             SPEED_SCALE_TO_UNSELECTED = 0.1,
                             SPEED_SCALE_ICON_TO_FOREGROUND = 0.005,
                             SPEED_SCALE_ICON_TO_BACKGROUND = 0.0025,
-                            SPEED_SCALE_ICON_WHILE_EXITING = 0.01,
+                            SPEED_SCALE_ICON_WHILE_EXITING = 0.1,
                             
                             BACKGROUND_STAR_ROTATION_SPEED = 0.05,
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
@@ -121,7 +121,8 @@ namespace Game1
 
             // background icon
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
-            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon();
+            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon("bentologo");
+            BackgroundGameIconOld.GetComponent<PositionComp>().Position += new Vector2(256f, 0f);
             //BackgroundRotatingStar = Factory.CreateBackgroundRotatingStar();
             //BackgroundRotatingStar.IsEnabled = false;
 
@@ -132,7 +133,7 @@ namespace Game1
             TTFactory.BuildTo(MainChannel);
 
             // mouse pointer entity            
-            MousePointer = Factory.CreateMousePointer();
+            MousePointer = Factory.CreateMousePointer();            
 
             // text
             TopLineText = TTFactory.CreateTextlet("IndieGig", "m41_lovebit");
@@ -224,9 +225,9 @@ namespace Game1
                     {
                         e.GetComponent<ScaleComp>().ScaleTarget = SCALE_WHILE_EXITING;
                         e.GetComponent<ScaleComp>().ScaleSpeed = SPEED_SCALE_ICON_WHILE_EXITING;
-                        var x = e.GetComponent<PositionComp>().Position.X;
-                        e.GetComponent<TargetMotionComp>().Target = new Vector2(x/10f,-450f-x); // fly away to top
-                        e.GetComponent<TargetMotionComp>().TargetVelocity = MOVE_ICONS_ON_EXIT_SPEED;
+                        //var x = e.GetComponent<PositionComp>().Position.X;
+                        //e.GetComponent<TargetMotionComp>().Target = new Vector2(x/10f,-450f-x); // fly away to top
+                        //e.GetComponent<TargetMotionComp>().TargetVelocity = MOVE_ICONS_ON_EXIT_SPEED;
                     }
                 }
             }
@@ -283,51 +284,61 @@ namespace Game1
 
             // mouse input
             var pos = MousePointer.GetComponent<PositionComp>().Position;
-            if (!pos.Equals(LastMousePos))
+            if (!pos.Equals(LastMousePos) && MousePointer.GetComponent<PositionComp>().SimTime > 0.3 )
             {
+                // only allow selection by mouse if mouse moved and if initial startup period of icons shuffling is over
                 IsMouseForSelection = true;
             }
             LastMousePos = pos;
 
             // use input
-            List<Entity> coll ;
+            List<Entity> userSelectedItems ;
             if (IsMouseForSelection)
             {
-                coll = MousePointer.GetComponent<SpriteComp>().Colliders;
+                userSelectedItems = MousePointer.GetComponent<SpriteComp>().Colliders;
                 IsMouseVisible = true;
             }
             else
             {
                 IsMouseVisible = false;
-                coll = new List<Entity>();
-                coll.Add(KeyboardSelectedGame);
+                userSelectedItems = new List<Entity>();
+                userSelectedItems.Add(KeyboardSelectedGame);
             }
-            SelectedGame = null;
+
+            Entity currentSelectedGame = null;
             foreach (Entity e in CollectionEntities)
             {
                 var sc = e.GetComponent<ScaleComp>();
-                if (SelectedGame == null && coll.Contains(e))
+
+                // test if user has made game e as a selection
+                if (currentSelectedGame == null && userSelectedItems.Contains(e))
                 {
+                    currentSelectedGame = e;
                     if (!IsExiting)
                     {
                         sc.ScaleTarget = SCALE_SELECTED;
                         sc.ScaleSpeed = SPEED_SCALE_TO_SELECTED;
                     }
-                    SelectedGame = e;
 
-                    // swap trick
-                    Entity tmp;
-                    tmp = BackgroundGameIconOld;
-                    BackgroundGameIconOld = BackgroundGameIcon;
-                    BackgroundGameIcon = tmp;
+                    // if selection of user changed...
+                    if (currentSelectedGame != SelectedGame)
+                    {
+                        // swap trick
+                        Entity tmp;
+                        tmp = BackgroundGameIconOld;
+                        BackgroundGameIconOld = BackgroundGameIcon;
+                        BackgroundGameIcon = tmp;
 
-                    // new icon                    
-                    BackgroundGameIcon.GetComponent<SpriteComp>().Texture = SelectedGame.GetComponent<SpriteComp>().Texture;
-                    BackgroundGameIcon.GetComponent<DrawComp>().Alpha = 0f;                    
+                        // new icon to be moved to foreground                   
+                        BackgroundGameIcon.GetComponent<SpriteComp>().Texture = currentSelectedGame.GetComponent<SpriteComp>().Texture;
+                        BackgroundGameIcon.GetComponent<DrawComp>().Alpha = 0f;
+
+                        SelectedGame = currentSelectedGame;
+                    }
 
                     if (IsMouseForSelection)
                     {
-                        KeyboardSelectedGame = SelectedGame;
+                        KeyboardSelectedGame = currentSelectedGame;
                         KeyboardSelectedGameIndex = CollectionEntities.IndexOf(KeyboardSelectedGame);
                     }
                 }
@@ -368,28 +379,27 @@ namespace Game1
 
         void BackgroundGameIconFadeTextureProcess()
         {
+            // FIXME more efficient and check why drawcolor doesnt work
             var dc = BackgroundGameIcon.GetComponent<DrawComp>();
             if (dc != null)
             {
                 if (dc.Alpha < 1f)
                     dc.Alpha += (1f/255f);
-                else
+                if (dc.Alpha >= 1f)
                     dc.Alpha = 1f;
+                dc.DrawColor = new Color(dc.Alpha, dc.Alpha, dc.Alpha, dc.Alpha);
             }
 
-            if (BackgroundGameIconOld != null)
+            var dcOld = BackgroundGameIconOld.GetComponent<DrawComp>();
+            if (dcOld != null)
             {
-                var dcOld = BackgroundGameIconOld.GetComponent<DrawComp>();
-                if (dcOld != null)
-                {
-                    if (dcOld.Alpha > 0f)
-                        dcOld.Alpha -= (1f / 255f);
-                    else
-                    {
-                        dcOld.Alpha = 0f;
-                    }
-                }
-            }                
+                if (dcOld.Alpha > 0f)
+                    dcOld.Alpha -= (1f / 255f);
+                if (dcOld.Alpha <= 0f)
+                    dcOld.Alpha = 0f;
+                dc.DrawColor = new Color(dc.Alpha, dc.Alpha, dc.Alpha, dc.Alpha);
+            }
+
         }
 
         /// <summary>
