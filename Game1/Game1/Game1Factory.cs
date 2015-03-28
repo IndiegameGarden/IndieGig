@@ -171,6 +171,12 @@ namespace Game1
         public Entity CreateBackgroundGameIcon(string spriteName = "supernova128")
         {
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
+            var sineFunc = new SineFunction();
+            sineFunc.Offset = 0.1;
+            sineFunc.Frequency = 0.09283;
+            sineFunc.Amplitude = 0.0278323;
+            TTFactory.AddModifier(fxLayer, WobbleFlowParameterScript, sineFunc);
+            
             var sprite = TTFactory.CreateSpritelet(spriteName);
             sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
             sprite.GetComponent<DrawComp>().LayerDepth = 0.99f;
@@ -186,6 +192,11 @@ namespace Game1
             return sprite;
         }
 
+        void WobbleFlowParameterScript(ScriptContext ctx, double val)
+        {
+            EffectParameter p = ctx.Entity.GetComponent<ScreenComp>().SpriteBatch.effect.Parameters["FlowParameter"];
+            p.SetValue((float)val);
+        }
      }
 
 }
