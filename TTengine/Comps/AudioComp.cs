@@ -12,6 +12,9 @@ namespace TTengine.Comps
     /// </summary>
     public class AudioComp: Comp
     {
+        /// <summary>Audio playing time used for audio script rendering. Holds when audio paused.</summary>
+        public double SimTime = 0.0;
+
         /// <summary>The audio script to play in TTMusicEngine format</summary>
         public SoundEvent AudioScript = null;
 

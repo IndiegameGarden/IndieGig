@@ -31,7 +31,6 @@ namespace TTengine.Systems
         {            
             if (!ac.IsPaused)
             {
-                ac.Dt = dt;
                 ac.SimTime += dt;
             }
             rp.Time = ac.SimTime;

@@ -279,7 +279,7 @@ namespace Game1
 
             // mouse input
             var pos = MousePointer.GetComponent<PositionComp>().Position;
-            if (!pos.Equals(LastMousePos) && MousePointer.GetComponent<PositionComp>().SimTime > 0.3 )
+            if (!pos.Equals(LastMousePos) && MousePointer.GetComponent<ScriptComp>().SimTime > 0.3 )
             {
                 // only allow selection by mouse if mouse moved and if initial startup period of icons shuffling is over
                 IsMouseForSelection = true;
