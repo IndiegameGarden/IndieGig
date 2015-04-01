@@ -165,6 +165,7 @@ namespace Game1
             sprite.GetComponent<DrawComp>().LayerDepth = 0.99f;
             sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
             sprite.GetComponent<SpriteComp>().CenterToMiddle();
+            sprite.AddComponent(new ScriptComp());
             //var rc = new RotateComp();
             //rc.RotateSpeed = 0;
             //sprite.AddComponent(rc);
@@ -172,14 +173,20 @@ namespace Game1
             sc.ScaleTarget = Game1.InstanceGame1.MainChannel.Screen.Width / GUIconstants.ICON_SIZE;
             sc.ScaleSpeed = 10;
             sprite.AddComponent(sc);
+
+            // advanced: make ScriptComp like to the ScriptComp of parent fxLayer
+            // this is used from Game1 to control WobbleFlowParameterScript
+            fxLayer.GetComponent<ScriptComp>().AddChild(sprite.GetComponent<ScriptComp>());
+
             return sprite;
         }
 
         void WobbleFlowParameterScript(ScriptContext ctx, double val)
         {
             var sc = ctx.Entity.GetComponent<ScreenComp>();
+            var sic = ctx.Entity.GetComponent<ScriptComp>();
             EffectParameter p = sc.SpriteBatch.effect.Parameters["FlowParameter"];
-            p.SetValue((float)(val /*+ 0.1 * sc.SimTime */) );
+            p.SetValue((float)(val + 0.01 * sic.SimTime ) );
         }
      }
 

@@ -42,7 +42,7 @@ namespace Game1
         public Entity MousePointer;
         public Entity SelectedGame, KeyboardSelectedGame;
         public Entity Music;
-        public Entity BackgroundGameIcon, BackgroundGameIconOld, BackgroundRotatingStar;
+        public Entity BackgroundGameIcon, BackgroundGameIconOld;
         public Entity TopLineText, HelpText;
         public List<Entity> CollectionEntities; // all entities in game library
         public GlobalStateEnum GlobalState;
@@ -134,8 +134,6 @@ namespace Game1
                     if (!IsExiting)
                     {                        
                         GameLaunchingProcess();                        
-                        //BackgroundGameIconNewTextureProcess();
-                        //BackgroundSpeedupRotationProcess(dt);
                     }
                     break;
 
@@ -143,21 +141,15 @@ namespace Game1
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess(true);
                     IconsShrinkingProcess();
-                    //BackgroundGameIconNewTextureProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
-                    //TopLineText.GetComponent<TextComp>().Text = "Launching";
                     GameRunProcess();
                     IconsShrinkingProcess();
-                    //BackgroundGameIconNewTextureProcess();
-                    //BackgroundSpeedupRotationProcess(dt, ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING);
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING_PHASE1:
-                    //TopLineText.GetComponent<TextComp>().Text = "Playing";
-                    //BackgroundSlowdownRotationProcess(dt, ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING);
                     StatePlayingPhase1Process();
                     break;
                 
@@ -171,7 +163,7 @@ namespace Game1
 
         void EscapeKeyProcess(double dt)
         {
-            CanExit = true; // (BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed > 0.02);
+            CanExit = true; 
 
             if (CanExit)
             {
@@ -194,17 +186,12 @@ namespace Game1
                     {
                         e.GetComponent<ScaleComp>().ScaleTarget = GUIconstants.SCALE_WHILE_EXITING;
                         e.GetComponent<ScaleComp>().ScaleSpeed = GUIconstants.SPEED_SCALE_ICON_WHILE_EXITING;
-                        //var x = e.GetComponent<PositionComp>().Position.X;
-                        //e.GetComponent<TargetMotionComp>().Target = new Vector2(x/10f,-450f-x); // fly away to top
-                        //e.GetComponent<TargetMotionComp>().TargetVelocity = MOVE_ICONS_ON_EXIT_SPEED;
                     }
                 }
             }
             if (IsExiting) 
             {
-                //BackgroundSlowdownRotationProcess(dt,2.0);
-                if (Music.GetComponent<AudioComp>().Ampl == 0 /*&&
-                    BackgroundRotatingStar.GetComponent<RotateComp>().RotateSpeed == 0 */ )
+                if (Music.GetComponent<AudioComp>().Ampl == 0 )
                     Exit();
             }
         }
@@ -299,6 +286,7 @@ namespace Game1
                         BackgroundGameIcon = tmp;
 
                         // new icon to be moved to foreground                   
+                        (BackgroundGameIcon.GetComponent<ScriptComp>().Parent as ScriptComp).SimTime = 0; // reset flow script to beginning.
                         BackgroundGameIcon.GetComponent<SpriteComp>().Texture = currentSelectedGame.GetComponent<SpriteComp>().Texture;
                         BackgroundGameIcon.GetComponent<DrawComp>().Alpha = 0f;
 
