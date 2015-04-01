@@ -140,17 +140,21 @@ namespace Game1
                 case GlobalStateEnum.STATE_CONFIGURING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess(true);
+                    BackgroundGameIconFadeTextureProcess();
                     IconsShrinkingProcess();
                     break;
 
                 case GlobalStateEnum.STATE_LAUNCHING:
                     MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     GameRunProcess();
+                    BackgroundGameIconFadeTextureProcess();
                     IconsShrinkingProcess();
                     break;
 
                 case GlobalStateEnum.STATE_PLAYING_PHASE1:
+                    MainChannel.IsActive = true; MainChannel.IsVisible = true;
                     StatePlayingPhase1Process();
+                    BackgroundGameIconFadeTextureProcess();
                     break;
                 
                 case GlobalStateEnum.STATE_PLAYING_PHASE2:
