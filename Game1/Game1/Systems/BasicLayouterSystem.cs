@@ -9,6 +9,7 @@ using Artemis.Attributes;
 using Artemis.Manager;
 using Artemis.System;
 using TTengine.Comps;
+using Game1;
 using Game1.Comps;
 
 namespace Game1.Systems
@@ -22,7 +23,7 @@ namespace Game1.Systems
         public static float Dx = 128f;
         public static float Dy = 128f;
 
-        protected int xPos, yPos, xPosMax = Game1.ICONCOUNT_HORIZONTAL;
+        protected int xPos, yPos, xPosMax = GUIconstants.ICONCOUNT_HORIZONTAL;
         protected float haloTime = 0f;
 
         protected override void Begin()

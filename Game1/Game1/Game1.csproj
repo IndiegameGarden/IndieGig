@@ -144,6 +144,7 @@
     <Compile Include="Download\IHttpFtpProtocolParameters.cs" />
     <Compile Include="Download\ProxyParameters.cs" />
     <Compile Include="GameRunner.cs" />
+    <Compile Include="GUIconstants.cs" />
     <Compile Include="IndieGigCollection.cs" />
     <Compile Include="Install\GameInstallRunTask.cs" />
     <Compile Include="Install\GameDownloadInstallRunTask.cs" />

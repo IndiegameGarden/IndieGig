@@ -54,25 +54,6 @@ namespace Game1
                     IsMouseForSelection = false,
                     IsReadyForKeypress = true;
 
-        // UI constants
-        public const double ICON_SIZE = 128, // pixels
-
-                            SCALE_SELECTED = 1.2,
-                            SCALE_UNSELECTED = 1.0,
-                            SCALE_WHILE_EXITING = 0.0002,
-                            SCALE_TO_BACKGROUND = SCALE_WHILE_EXITING,
-                            SCALE_TO_FOREGROUND = SCALE_UNSELECTED,
-
-                            SPEED_SCALE_TO_SELECTED = 0.1,
-                            SPEED_SCALE_TO_UNSELECTED = 0.1,
-                            SPEED_SCALE_ICON_WHILE_EXITING = 0.1,
-                            SPEED_SCALE_ICON_TO_FOREGROUND = SPEED_SCALE_TO_SELECTED,
-                            SPEED_SCALE_ICON_TO_BACKGROUND = SPEED_SCALE_ICON_WHILE_EXITING,
-                            
-                            MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
-        public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_TO_FOREGROUND);
-        public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
-
         public Game1()
         {
             InstanceGame1 = this;
@@ -200,7 +181,7 @@ namespace Game1
                 {
                     var afc = Music.GetComponent<AudioFadingComp>();
                     afc.FadeTarget = 0;
-                    afc.FadeSpeed = MUSIC_FADEOUT_ON_EXIT_SPEED;
+                    afc.FadeSpeed = GUIconstants.MUSIC_FADEOUT_ON_EXIT_SPEED;
                     afc.IsFading = true;
                     IsExiting = true;
                     TopLineText.GetComponent<TextComp>().Text = "Bye  :-)";
@@ -211,8 +192,8 @@ namespace Game1
                     // icons shrink
                     foreach (Entity e in CollectionEntities)
                     {
-                        e.GetComponent<ScaleComp>().ScaleTarget = SCALE_WHILE_EXITING;
-                        e.GetComponent<ScaleComp>().ScaleSpeed = SPEED_SCALE_ICON_WHILE_EXITING;
+                        e.GetComponent<ScaleComp>().ScaleTarget = GUIconstants.SCALE_WHILE_EXITING;
+                        e.GetComponent<ScaleComp>().ScaleSpeed = GUIconstants.SPEED_SCALE_ICON_WHILE_EXITING;
                         //var x = e.GetComponent<PositionComp>().Position.X;
                         //e.GetComponent<TargetMotionComp>().Target = new Vector2(x/10f,-450f-x); // fly away to top
                         //e.GetComponent<TargetMotionComp>().TargetVelocity = MOVE_ICONS_ON_EXIT_SPEED;
@@ -237,8 +218,8 @@ namespace Game1
             {
                 if (kb.IsKeyDown(Keys.Right))   d = +1;
                 if (kb.IsKeyDown(Keys.Left))    d = -1;
-                if (kb.IsKeyDown(Keys.Up))      d = -ICONCOUNT_HORIZONTAL;
-                if (kb.IsKeyDown(Keys.Down))    d = +ICONCOUNT_HORIZONTAL;
+                if (kb.IsKeyDown(Keys.Up))      d = -GUIconstants.ICONCOUNT_HORIZONTAL;
+                if (kb.IsKeyDown(Keys.Down))    d = +GUIconstants.ICONCOUNT_HORIZONTAL;
                 if (kb.IsKeyDown(Keys.C))   // config
                 {
                     if (SelectedGame != null)
@@ -304,8 +285,8 @@ namespace Game1
                     currentSelectedGame = e;
                     if (!IsExiting)
                     {
-                        sc.ScaleTarget = SCALE_SELECTED;
-                        sc.ScaleSpeed = SPEED_SCALE_TO_SELECTED;
+                        sc.ScaleTarget = GUIconstants.SCALE_SELECTED;
+                        sc.ScaleSpeed = GUIconstants.SPEED_SCALE_TO_SELECTED;
                     }
 
                     // if selection of user changed...
@@ -332,13 +313,13 @@ namespace Game1
                 }
                 else if (!IsExiting)
                 {
-                    sc.ScaleTarget = SCALE_UNSELECTED;
-                    sc.ScaleSpeed = SPEED_SCALE_TO_UNSELECTED;
+                    sc.ScaleTarget = GUIconstants.SCALE_UNSELECTED;
+                    sc.ScaleSpeed = GUIconstants.SPEED_SCALE_TO_UNSELECTED;
                 }
 
                 // biggest thing shows on top
                 var pc = e.GetComponent<PositionComp>();
-                pc.Depth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
+                pc.Depth = (float)((GUIconstants.SCALE_MAX - sc.Scale) / GUIconstants.SCALE_MAX);
             }
 
             HelpText.GetComponent<TextComp>().Text = "";
@@ -423,16 +404,16 @@ namespace Game1
                 var sc = e.GetComponent<ScaleComp>();
                 if (SelectedGame != e)
                 {
-                    sc.ScaleTarget = SCALE_TO_BACKGROUND;
-                    sc.ScaleSpeed = SPEED_SCALE_ICON_TO_BACKGROUND;
+                    sc.ScaleTarget = GUIconstants.SCALE_TO_BACKGROUND;
+                    sc.ScaleSpeed = GUIconstants.SPEED_SCALE_ICON_TO_BACKGROUND;
                 }
                 else
                 {
-                    sc.ScaleTarget = SCALE_TO_FOREGROUND;
-                    sc.ScaleSpeed = SPEED_SCALE_ICON_TO_FOREGROUND;
+                    sc.ScaleTarget = GUIconstants.SCALE_TO_FOREGROUND;
+                    sc.ScaleSpeed = GUIconstants.SPEED_SCALE_ICON_TO_FOREGROUND;
                 }
                 var pc = e.GetComponent<PositionComp>();
-                pc.Depth = (float)((SCALE_MAX - sc.Scale) / SCALE_MAX);
+                pc.Depth = (float)((GUIconstants.SCALE_MAX - sc.Scale) / GUIconstants.SCALE_MAX);
             }
              
         }

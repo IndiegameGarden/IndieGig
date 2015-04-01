@@ -186,7 +186,7 @@ namespace Game1
             //rc.RotateSpeed = 0;
             //sprite.AddComponent(rc);
             var sc = new ScaleComp();
-            sc.ScaleTarget = Game1.InstanceGame1.MainChannel.Screen.Width / Game1.ICON_SIZE;
+            sc.ScaleTarget = Game1.InstanceGame1.MainChannel.Screen.Width / GUIconstants.ICON_SIZE;
             sc.ScaleSpeed = 10;
             sprite.AddComponent(sc);
             return sprite;
