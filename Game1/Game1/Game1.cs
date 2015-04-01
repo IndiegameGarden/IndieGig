@@ -60,14 +60,14 @@ namespace Game1
                             SCALE_SELECTED = 1.2,
                             SCALE_UNSELECTED = 1.0,
                             SCALE_WHILE_EXITING = 0.0002,
-                            SCALE_TO_BACKGROUND = SCALE_UNSELECTED,
-                            SCALE_TO_FOREGROUND = 1.42,
+                            SCALE_TO_BACKGROUND = SCALE_WHILE_EXITING,
+                            SCALE_TO_FOREGROUND = SCALE_UNSELECTED,
 
                             SPEED_SCALE_TO_SELECTED = 0.1,
                             SPEED_SCALE_TO_UNSELECTED = 0.1,
-                            SPEED_SCALE_ICON_TO_FOREGROUND = 0.005,
-                            SPEED_SCALE_ICON_TO_BACKGROUND = 0.0025,
                             SPEED_SCALE_ICON_WHILE_EXITING = 0.1,
+                            SPEED_SCALE_ICON_TO_FOREGROUND = SPEED_SCALE_TO_SELECTED,
+                            SPEED_SCALE_ICON_TO_BACKGROUND = SPEED_SCALE_ICON_WHILE_EXITING,
                             
                             BACKGROUND_STAR_ROTATION_SPEED = 0.05,
                             BACKGROUND_ICON_ROTATION_SPEED = 0.04,
@@ -411,38 +411,6 @@ namespace Game1
                 GardenItem gi = SelectedGame.GetComponent<GardenItemComp>().Item;
                 GameRunner.TryRunGame(gi,isConfigure);
             }
-        }
-
-        void BackgroundSlowdownRotationProcess(double dt, double multiplier = 1.0 )
-        {
-            var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
-            var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
-            double dr = -BACKGROUND_ROTATION_SLOWDOWN_SPEED * multiplier * dt;
-            if (rc1.RotateSpeed > 0)
-                rc1.RotateSpeed += dr;
-            if (rc2.RotateSpeed > 0)
-                rc2.RotateSpeed += dr;
-            if (rc1.RotateSpeed < 0)
-                rc1.RotateSpeed = 0;
-            if (rc2.RotateSpeed < 0)
-                rc2.RotateSpeed = 0;
-        }
-
-        void BackgroundSpeedupRotationProcess(double dt, double multiplier = 1.0)
-        {
-            var rc1 = BackgroundGameIcon.GetComponent<RotateComp>();
-            var rc2 = BackgroundRotatingStar.GetComponent<RotateComp>();
-            double dr = multiplier * BACKGROUND_ROTATION_SPEEDUP_SPEED * dt;
-            var spd1 = multiplier * BACKGROUND_ICON_ROTATION_SPEED;
-            var spd2 = multiplier * BACKGROUND_STAR_ROTATION_SPEED;
-            if (rc1.RotateSpeed < spd1)
-                rc1.RotateSpeed += dr;
-            if (rc2.RotateSpeed < spd2)
-                rc2.RotateSpeed += dr;
-            if (rc1.RotateSpeed > spd1)
-                rc1.RotateSpeed = spd1;
-            if (rc2.RotateSpeed > spd2)
-                rc2.RotateSpeed = spd2;
         }
 
         void StatePlayingPhase1Process()
