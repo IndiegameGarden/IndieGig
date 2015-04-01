@@ -11,4 +11,5 @@ cd %1
  /importer:EffectImporter^
  /processor:EffectProcessor^
  /build:GameIcon.fx^
- /build:Background.fx
+ /build:Background.fx^
+ /build:Background2.fx

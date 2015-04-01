@@ -151,11 +151,21 @@ namespace Game1
             return e;
         }
 
-        public Entity CreateBackgroundGameIcon(string spriteName = "supernova128")
+        public Entity CreateBackgroundGameIcon()
         {
-            var fxLayer = TTFactory.CreateFxScreenlet("Background");
+            return CreateBackgroundGameIcon("supernova128", "Background");
+        }
+
+        public Entity CreateBackgroundGameIcon2()
+        {
+            return CreateBackgroundGameIcon("supernova128", "Background2");
+        }
+
+        public Entity CreateBackgroundGameIcon(string spriteName, string fxName)
+        {
+            var fxLayer = TTFactory.CreateFxScreenlet(fxName);
             var sineFunc = new SineFunction();
-            sineFunc.Offset = 0.1;
+            sineFunc.Offset = 1.0;
             sineFunc.Frequency = 0.09283;
             sineFunc.Amplitude = 0.0278323;
             TTFactory.AddModifier(fxLayer, WobbleFlowParameterScript, sineFunc);
@@ -186,7 +196,7 @@ namespace Game1
             var sc = ctx.Entity.GetComponent<ScreenComp>();
             var sic = ctx.Entity.GetComponent<ScriptComp>();
             EffectParameter p = sc.SpriteBatch.effect.Parameters["FlowParameter"];
-            p.SetValue((float)(val + 0.01 * sic.SimTime ) );
+            p.SetValue((float)(val / (1 +  0.01321 * sic.SimTime ) ));
         }
      }
 

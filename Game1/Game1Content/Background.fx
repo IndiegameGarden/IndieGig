@@ -1,16 +1,15 @@
 // (c) 2010-2015 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 
-// background shader - RGB data contains a thumbnail or image from which colors are used
-// and alpha channel should contain intensity of another image (i.e. BW image 8-bit encoded)
+// background shader with warping and random effects
 
 // --- variables set from the outside 
 // must be same for all sprites in a batch rendered with this shader.
-// linear time - for animation control
-// float Time = 0;
-float FlowParameter = 0.1;
+float FlowParameter = 1.0;
+float RandomParameter = 0.05;
 // center of rgb sprite
 float2 Center = float2(0.5,0.5);
 float Scale = 1.0;
+
 
 // modify the sampler state on the zero texture sampler, used by SpriteBatch
 sampler TextureSampler : register(s0) = 
@@ -42,8 +41,7 @@ float4 PixelShaderFunction(float4 position : SV_Position, float4 color : COLOR0,
 	//float bri = (tex2D(TextureSampler, texCoord )).a ;
 	float2 vDifNorm = normalize(vDif);
 	float lDif = length(vDif);
-	float2 randomizerOffset = float2(0,0); //color.r,color.g);
-	float lWarped = (1 + FlowParameter*random(texCoord + randomizerOffset ))*lDif;
+	float lWarped = (1 * FlowParameter + RandomParameter*random(texCoord))*lDif;
 	//res = tex2D(TextureSampler, (vDif/Scale+Center) ) ;		  
 	res  = tex2D(TextureSampler, (vDifNorm*lWarped/Scale+Center) ) ;		  
 	float bri = (res.r + res.g + res.b) / 3.0 * color.a;

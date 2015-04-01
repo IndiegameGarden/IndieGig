@@ -94,7 +94,7 @@ namespace Game1
 
             // background icon
             BackgroundGameIcon = Factory.CreateBackgroundGameIcon();
-            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon();
+            BackgroundGameIconOld = Factory.CreateBackgroundGameIcon2();
 
             // create collection onto channel
             var iconsLayer = Factory.CreateIconsLayer();
