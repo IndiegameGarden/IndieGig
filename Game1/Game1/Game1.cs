@@ -322,6 +322,9 @@ namespace Game1
                 pc.Depth = (float)((GUIconstants.SCALE_MAX - sc.Scale) / GUIconstants.SCALE_MAX);
             }
 
+            if (currentSelectedGame == null)
+                SelectedGame = null;    // no selection is made currently.
+
             HelpText.GetComponent<TextComp>().Text = "";
             if (SelectedGame != null)
             {
