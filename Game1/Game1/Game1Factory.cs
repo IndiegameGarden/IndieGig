@@ -151,23 +151,6 @@ namespace Game1
             return e;
         }
 
-        public Entity CreateBackgroundRotatingStar()
-        {
-            var fxLayer = TTFactory.CreateFxScreenlet("Background");
-            var sprite = TTFactory.CreateSpritelet("supernova.png");
-            sprite.GetComponent<DrawComp>().DrawScreen = fxLayer.GetComponent<ScreenComp>();
-            sprite.GetComponent<PositionComp>().Position = TTFactory.BuildScreen.Center;
-            sprite.GetComponent<SpriteComp>().CenterToMiddle();
-            var rc = new RotateComp();
-            rc.RotateSpeed = 0;
-            sprite.AddComponent(rc);
-            var sc = new ScaleComp();
-            sc.ScaleTarget = BACKGROUND_STAR_SCALE;
-            sc.ScaleSpeed = 0.1;
-            sprite.AddComponent(sc);
-            return sprite;
-        }
-
         public Entity CreateBackgroundGameIcon(string spriteName = "supernova128")
         {
             var fxLayer = TTFactory.CreateFxScreenlet("Background");
