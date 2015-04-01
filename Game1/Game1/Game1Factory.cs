@@ -194,8 +194,9 @@ namespace Game1
 
         void WobbleFlowParameterScript(ScriptContext ctx, double val)
         {
-            EffectParameter p = ctx.Entity.GetComponent<ScreenComp>().SpriteBatch.effect.Parameters["FlowParameter"];
-            p.SetValue((float)val);
+            var sc = ctx.Entity.GetComponent<ScreenComp>();
+            EffectParameter p = sc.SpriteBatch.effect.Parameters["FlowParameter"];
+            p.SetValue((float)(val /*+ 0.1 * sc.SimTime */) );
         }
      }
 
