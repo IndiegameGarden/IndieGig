@@ -69,13 +69,6 @@ namespace Game1
                             SPEED_SCALE_ICON_TO_FOREGROUND = SPEED_SCALE_TO_SELECTED,
                             SPEED_SCALE_ICON_TO_BACKGROUND = SPEED_SCALE_ICON_WHILE_EXITING,
                             
-                            BACKGROUND_STAR_ROTATION_SPEED = 0.05,
-                            BACKGROUND_ICON_ROTATION_SPEED = 0.04,
-                            BACKGROUND_ROTATION_SLOWDOWN_SPEED = 0.01,
-                            BACKGROUND_ROTATION_SPEEDUP_SPEED = 0.01,
-                            ROTATION_SPEEDUP_FACTOR_WHILE_LAUNCHING = 2.0,
-                            ROTATION_SLOWDOWN_FACTOR_WHILE_PLAYING = 2.0,
-                            MOVE_ICONS_ON_EXIT_SPEED = 800.0,
                             MUSIC_FADEOUT_ON_EXIT_SPEED = 0.45;
         public double       SCALE_MAX = Math.Max(SCALE_SELECTED, SCALE_TO_FOREGROUND);
         public const int    ICONCOUNT_HORIZONTAL = 9; // FIXME make adaptive to screen size
