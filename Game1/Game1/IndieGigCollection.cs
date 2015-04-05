@@ -118,6 +118,29 @@ namespace Game1
             g.ExeFile = "IAMJASON.exe";
             g.ExeConfig = "winsetup.exe";
 
+            g = CreateItem("pouetchess");
+            g.Name = "pouetChess";
+            g.ExeFile = "pouetChess.exe";
+
+            g = CreateItem("Butcher");
+            g.Name = "Bad Dream - Butcher";
+            g.ExeFile = "Bad Dream - Butcher.exe";
+
+            g = CreateItem("8bitkiller");
+            g.Name = "8-bit Killer";
+            g.ExeFile = "8bit_killer.exe";
+
+            g = CreateItem("starman");
+            g.Name = "Starman";
+            g.ExeFile = "starman.exe";
+
+            g = CreateItem("Alex-Adventure");
+            g.Name = "Alex's Adventure";
+            g.ExeFile = "alexsadventure.exe";
+
+            g = CreateItem("CONDOR");
+            g.Name = "CONDOR";
+            g.ExeFile = "CONDOR win.exe";
         }
 
         private GardenItem CreateItem(string id)

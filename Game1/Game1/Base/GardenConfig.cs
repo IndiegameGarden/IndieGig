@@ -15,7 +15,8 @@ namespace IndiegameGarden.Base
 #if DEBUG
         protected const string DEBUG_PATH = "..\\..\\..\\..\\..\\";
 #else
-        protected const string DEBUG_PATH = "";
+        //protected const string DEBUG_PATH = ""; // FIXME TODO
+        protected const string DEBUG_PATH = "..\\..\\..\\..\\..\\";
 #endif
         /// <summary>
         /// name of the current client (and current version)

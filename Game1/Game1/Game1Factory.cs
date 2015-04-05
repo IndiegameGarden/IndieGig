@@ -167,7 +167,7 @@ namespace Game1
             var sineFunc = new SineFunction();
             sineFunc.Offset = 1.0;
             sineFunc.Frequency = 0.09283;
-            sineFunc.Amplitude = 0.0108323;
+            sineFunc.Amplitude = 0.0078323;
             TTFactory.AddModifier(fxLayer, WobbleFlowParameterScript, sineFunc);
             
             var sprite = TTFactory.CreateSpritelet(spriteName);
