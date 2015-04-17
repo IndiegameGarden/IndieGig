@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("IndieGig")]
 [assembly: AssemblyProduct("IndieGig")]
-[assembly: AssemblyDescription("How many indie games can you pack in one gig?")]
+[assembly: AssemblyDescription("How many indie games fit in one gig?")]
 [assembly: AssemblyCompany("IndiegameGarden.com")]
-[assembly: AssemblyCopyright("Copyright © game authors and IndiegameGarden.com 2014")]
+[assembly: AssemblyCopyright("Copyright © game authors / Indiegame Garden 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.8.0.0")]
