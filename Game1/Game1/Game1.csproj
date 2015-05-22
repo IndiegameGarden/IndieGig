@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{529A2029-70CC-4820-8BA7-AFBE17B0CF6A}</ProjectGuid>
@@ -65,54 +65,54 @@
     </Reference>
     <Reference Include="Lidgren.Network, Version=2011.3.12.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\Lidgren.Network.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework.Net, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\MonoGame.Framework.Net.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\MonoGame.Framework.Net.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.MediaFoundation, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.RawInput, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.RawInput.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.RawInput.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XAudio2, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.XInput, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MonoGame\SharpDX.XInput.dll</HintPath>
+      <HintPath>..\..\TTengine\MonoGame\SharpDX.XInput.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
@@ -169,7 +169,7 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Artemis_XNA_INDEPENDENT\Artemis.csproj">
+    <ProjectReference Include="..\..\TTengine\Artemis_XNA_INDEPENDENT\Artemis.csproj">
       <Project>{22C89AF2-E1CF-4976-91B9-7D33773DC6E7}</Project>
       <Name>Artemis</Name>
     </ProjectReference>
@@ -177,11 +177,11 @@
       <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
       <Name>MyDownloader.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TTengine\TTengine.csproj">
+    <ProjectReference Include="..\..\TTengine\TTengine\TTengine.csproj">
       <Project>{616035D5-3927-44CD-BD41-2EEE846AC3A3}</Project>
       <Name>TTengine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\TTMusicEngine\TTMusicEngine.csproj">
+    <ProjectReference Include="..\..\TTengine\TTMusicEngine\TTMusicEngine.csproj">
       <Project>{cb99d0c9-fd0e-4b90-91bd-7d5816b38a2c}</Project>
       <Name>TTMusicEngine</Name>
     </ProjectReference>
@@ -222,7 +222,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--
-      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      To modify your build process, add your task inside one of the targets below and uncomment it.
       Other similar extension points exist, see Microsoft.Common.targets.
       <Target Name="BeforeBuild">
       </Target>
