@@ -1,5 +1,6 @@
 // (c) 2010-2015 IndiegameGarden.com. Distributed under the FreeBSD license in LICENSE.txt
 using System;
+using TTengine.Util;
 
 namespace Game1
 {
@@ -11,10 +12,19 @@ namespace Game1
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            try
             {
-                game.Run();
+                using (Game1 game = new Game1())
+                {
+                    game.Run();
+                }
             }
+            catch (Exception ex)
+            {
+                MsgBox.Show("FEIG! (Fatal Error In Game)",
+                  "Fatal Error - if you want you can notify the author.\n" + ex.Message + "\n" + ex.ToString());
+            }
+
         }
     }
 #endif
